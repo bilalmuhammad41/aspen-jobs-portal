@@ -38,7 +38,8 @@ export async function createSession(userId: number) {
   });
 
   const sessionId = newSession.id;
-  const session = await encrypt({ userId, sessionId, expiresAt });
+  const user = await prisma.user.findFirst({where: {id: newSession.userId}})
+  const session = await encrypt({ userId: user?.id as number, role: user?.role as string, sessionId, expiresAt });
 
   cookies().set("session", session, {
     httpOnly: true,
