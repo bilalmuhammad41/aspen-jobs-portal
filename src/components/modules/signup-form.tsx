@@ -6,9 +6,13 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
 import { LoaderCircle } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default function SignupForm() {
   const [state, action] = useFormState(signup, undefined);
+  if (state) {
+    redirect("/dashboard");
+  }
   const { pending } = useFormStatus();
   return (
     <div>

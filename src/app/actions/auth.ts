@@ -1,9 +1,14 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { SignupFormSchema, LoginFormSchema, FormState } from "@/app/lib/definitions";
+import {
+  SignupFormSchema,
+  LoginFormSchema,
+  FormState,
+} from "@/app/lib/definitions";
 import prisma from "../lib/prisma";
 import { createSession, deleteSession } from "../lib/session";
+import { Role } from "@prisma/client";
 
 export async function signup(state: FormState, formData: FormData) {
   console.log(formData);
@@ -40,6 +45,7 @@ export async function signup(state: FormState, formData: FormData) {
         name,
         email,
         password: hashedPassword,
+        role: Role.ADMIN,
       },
     });
 

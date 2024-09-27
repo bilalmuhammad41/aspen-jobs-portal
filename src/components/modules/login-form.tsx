@@ -29,7 +29,13 @@ export default function LoginForm() {
           <form action={formAction} className="flex flex-col gap-4">
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="example@gmail.com"
+              />
               {state?.errors?.email && (
                 <p className="text-sm text-red-500">{state.errors.email[0]}</p>
               )}
