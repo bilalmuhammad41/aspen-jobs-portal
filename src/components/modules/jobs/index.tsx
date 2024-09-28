@@ -13,10 +13,10 @@ import AllJobsList from "./all-jobs-list";
 import { getSession } from "@/app/lib/session";
 
 export default async function JobsModule() {
-  const jobs = await getAllJobs();
   const users = await getAllUsers();
   const session = await getSession();
-  const role = session.role;
+  const role = session?.role;
+  const userId = session?.userId;
 
   return (
     <>
@@ -34,7 +34,7 @@ export default async function JobsModule() {
           <CardDescription>View and manage all jobs.</CardDescription>
         </CardHeader>
         <CardContent>
-          <AllJobsList jobs={jobs} />
+          <AllJobsList />
         </CardContent>
         <CardFooter>
           <div className="text-xs text-muted-foreground">

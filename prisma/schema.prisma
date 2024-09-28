@@ -68,6 +68,8 @@ model Vote {
   jobId     Int
   job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([userId, jobId])
 }
 
 model JobStakeholder {

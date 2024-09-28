@@ -10,10 +10,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-  VisibilityState,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -37,7 +33,7 @@ import {
 } from "@/components/ui/table";
 import JobSheet from "./job-sheet";
 import { LoaderCircle, MoreHorizontal } from "lucide-react";
-import JobsService, { useJobs } from "@/services/job.service";
+import JobsService from "@/services/job.service";
 
 export type Job = {
   id: number;
