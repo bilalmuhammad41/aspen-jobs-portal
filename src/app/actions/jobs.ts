@@ -58,7 +58,6 @@ export async function createJob(
   }
 
   try {
-    console.log(prisma);
     const job = await prisma.job.create({
       data: {
         title,
