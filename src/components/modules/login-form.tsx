@@ -68,7 +68,7 @@ export default function LoginForm() {
             </Button>
           </form>
           <p>
-            Don't have an account? <Link href="/signup">Signup</Link>
+            Don&apos;t have an account? <Link href="/signup">Signup</Link>
           </p>
         </CardContent>
       </Card>

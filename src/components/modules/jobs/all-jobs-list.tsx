@@ -1,16 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -27,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -41,6 +33,8 @@ import {
 } from "@/components/ui/table";
 import JobSheet from "./job-sheet";
 import { MoreHorizontal } from "lucide-react";
+import { ColumnFiltersState } from "@tanstack/react-table";
+import { PaginationState } from "@tanstack/react-table";
 
 export type Job = {
   id: number;
@@ -52,7 +46,11 @@ export type Job = {
     role: string;
   };
 };
-
+type AllJobsListProps = {
+  jobs: {
+    data: Job[];
+  };
+};
 export const columns: ColumnDef<Job>[] = [
   {
     id: "select",
@@ -146,7 +144,7 @@ export const columns: ColumnDef<Job>[] = [
   },
 ];
 
-export default function AllJobsList({ jobs }) {
+export default function AllJobsList({ jobs }: AllJobsListProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

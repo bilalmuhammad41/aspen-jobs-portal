@@ -5,9 +5,7 @@ import {
   GetAllJobsApiResponse,
   UpdateJobData,
   UpdateJobApiResponse,
-  JobData,
   GetJobApiResponse,
-  FormState,
   CreateJobFormSchema,
 } from "../lib/definitions";
 import prisma from "../lib/prisma";

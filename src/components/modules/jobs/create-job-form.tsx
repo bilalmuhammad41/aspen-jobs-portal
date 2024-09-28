@@ -20,14 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { GetAllUsersApiResponse } from "@/app/lib/definitions";
 import { PlusCircleIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useFormState } from "react-dom";
-import { createJob } from "@/app/actions/jobs";
-import { ErrorApiResponse } from "@/app/lib/definitions";
 
 export default function CreateJobForm({ users }) {
   const handleSubmit = async (event) => {
@@ -37,12 +33,10 @@ export default function CreateJobForm({ users }) {
 
     console.log(formData);
     try {
-      const response = await fetch("/api/jobs", {
+      await fetch("/api/jobs", {
         method: "POST",
         body: formData,
       });
-
-      const result = await response.json();
     } catch (error) {
       console.error("Error creating job:", error);
     }

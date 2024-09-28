@@ -1,5 +1,3 @@
-import { description } from "@/components/layout/AdminLayout";
-import { User } from "@prisma/client";
 import Error from "next/error";
 import { z } from "zod";
 

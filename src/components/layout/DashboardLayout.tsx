@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Bell,
   LineChart,
-  Package,
   Package2,
   ShoppingCart,
   Users,

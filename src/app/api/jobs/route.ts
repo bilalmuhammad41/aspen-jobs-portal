@@ -1,5 +1,4 @@
 import { createJob, getAllJobs } from "@/app/actions/jobs";
-import { JobData } from "@/app/lib/definitions";
 import { NextResponse } from "next/server";
 // Adjust the path as needed
 

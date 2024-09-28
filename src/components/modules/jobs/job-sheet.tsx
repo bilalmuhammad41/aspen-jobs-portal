@@ -18,10 +18,6 @@ export default function JobSheet({ job }) {
     setIsOpen(true);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   return (
     <>
       <Button className="w-full" variant="link" onClick={handleOpen}>

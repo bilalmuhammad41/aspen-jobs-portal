@@ -10,16 +10,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useFormState, useFormStatus } from "react-dom";
+import { useState } from "react";
 import { logout } from "@/app/actions/auth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function TopNav() {
-  const [state, action] = useFormState(async () => {
-    await logout();
-    redirect("/login");
-  }, undefined);
-  const { pending } = useFormStatus();
+  const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setIsPending(true);
+    try {
+      const result = await logout();
+      if (result.success) {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsPending(false);
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,8 +44,8 @@ export default function TopNav() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Button className="w-full" disabled={pending} onClick={action}>
-            Logout
+          <Button className="w-full" disabled={isPending} onClick={handleLogout}>
+            {isPending ? "Logging out..." : "Logout"}
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
