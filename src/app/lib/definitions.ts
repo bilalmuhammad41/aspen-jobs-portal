@@ -84,6 +84,12 @@ export interface Job {
   owner: Owner;
 }
 
+export type CreateJob = {
+  
+  title: string;
+  description: string;
+  ownerId: number;
+}
 // API response for a single job
 export interface GetJobApiResponse extends ApiResponse {
   data: Job;

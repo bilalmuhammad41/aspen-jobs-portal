@@ -10,6 +10,10 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -32,9 +36,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import JobSheet from "./job-sheet";
-import { MoreHorizontal } from "lucide-react";
-import { ColumnFiltersState } from "@tanstack/react-table";
-import { PaginationState } from "@tanstack/react-table";
+import { LoaderCircle, MoreHorizontal } from "lucide-react";
+import JobsService, { useJobs } from "@/services/job.service";
 
 export type Job = {
   id: number;
@@ -46,11 +49,7 @@ export type Job = {
     role: string;
   };
 };
-type AllJobsListProps = {
-  jobs: {
-    data: Job[];
-  };
-};
+
 export const columns: ColumnDef<Job>[] = [
   {
     id: "select",
@@ -102,9 +101,7 @@ export const columns: ColumnDef<Job>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("description")}</div>
-    ),
+    cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
   },
   {
     accessorKey: "owner.name",
@@ -144,21 +141,24 @@ export const columns: ColumnDef<Job>[] = [
   },
 ];
 
-export default function AllJobsList({ jobs }: AllJobsListProps) {
+export default function AllJobsList() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 5,
+    pageSize: 10,
   });
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const { useFetchAllJobs } = JobsService();
+  const { data: jobs, isLoading, isError } = useFetchAllJobs();
+
   const table = useReactTable({
-    data: jobs.data || [],
+    data: jobs?.data || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -177,6 +177,7 @@ export default function AllJobsList({ jobs }: AllJobsListProps) {
       pagination,
     },
   });
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -218,7 +219,7 @@ export default function AllJobsList({ jobs }: AllJobsListProps) {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table?.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
@@ -236,8 +237,17 @@ export default function AllJobsList({ jobs }: AllJobsListProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table?.getRowModel().rows?.length ? (
-              table?.getRowModel().rows.map((row) => (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  className="text-center text-gray-500 py-10 font-[500]"
+                >
+                  <LoaderCircle className="mx-auto animate-spin" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}

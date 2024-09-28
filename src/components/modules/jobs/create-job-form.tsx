@@ -19,30 +19,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusCircleIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import JobsService, { useCreateJob } from "@/services/job.service";
 
 export default function CreateJobForm({ users }) {
+  const { useHandleCreateJob } = JobsService();
+  const {
+    mutate: handleCreateJob,
+    isPending,
+    isSuccess,
+  } = useHandleCreateJob();
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
 
     const formData = new FormData(event.target);
 
-    console.log(formData);
-    try {
-      await fetch("/api/jobs", {
-        method: "POST",
-        body: formData,
-      });
-    } catch (error) {
-      console.error("Error creating job:", error);
-    }
+    handleCreateJob(formData);
   };
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  useEffect(() => {
+    if (isSuccess) {
+      setIsDialogOpen(false);
+    }
+  }, [isSuccess]);
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
@@ -106,7 +110,9 @@ export default function CreateJobForm({ users }) {
             </Select>
           </div>
           <DialogFooter>
-            <Button type="submit">Create</Button>
+            <Button disabled={isPending} type="submit">
+              Create
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
