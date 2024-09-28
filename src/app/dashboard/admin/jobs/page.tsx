@@ -1,13 +1,10 @@
-"use client";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import JobsTable from "@/components/modules/jobs/jobs-table";
 
-import AdminLayout from "@/components/layout/AdminLayout";
-import JobsTable from "@/components/modules/jobs-table";
-
-export default function JobsPage() {
-  return(
-    <AdminLayout>
-
+export default async function JobsPage() {
+  return (
+    <DashboardLayout>
       <JobsTable />
-    </AdminLayout>
-  ) 
+    </DashboardLayout>
+  );
 }

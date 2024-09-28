@@ -1,9 +1,9 @@
-import UserLayout from "@/components/layout/UserLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 export default function UserDashboard() {
   return (
-    <UserLayout>
+    <DashboardLayout>
       <div>User Dashboard</div>
-    </UserLayout>
+    </DashboardLayout>
   );
 }

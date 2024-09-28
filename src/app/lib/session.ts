@@ -15,7 +15,9 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey);
 }
 
-export async function decrypt(session: string | undefined = ""): Promise<SessionPayload | null> {
+export async function decrypt(
+  session: string | undefined = ""
+): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],
@@ -38,8 +40,15 @@ export async function createSession(userId: number) {
   });
 
   const sessionId = newSession.id;
-  const user = await prisma.user.findFirst({where: {id: newSession.userId}})
-  const session = await encrypt({ userId: user?.id as number, role: user?.role as string, sessionId, expiresAt });
+  const user = await prisma.user.findFirst({
+    where: { id: newSession.userId },
+  });
+  const session = await encrypt({
+    userId: user?.id as number,
+    role: user?.role as string,
+    sessionId,
+    expiresAt,
+  });
 
   cookies().set("session", session, {
     httpOnly: true,
@@ -66,6 +75,12 @@ export async function updateSession() {
     sameSite: "lax",
     path: "/",
   });
+}
+
+export async function getSession() {
+  const session = cookies().get("session")?.value;
+  const data = await decrypt(session);
+  return data;
 }
 
 export function deleteSession() {

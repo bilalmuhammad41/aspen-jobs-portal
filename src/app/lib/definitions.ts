@@ -1,3 +1,6 @@
+import { description } from "@/components/layout/AdminLayout";
+import { User } from "@prisma/client";
+import Error from "next/error";
 import { z } from "zod";
 
 export const SignupFormSchema = z.object({
@@ -22,19 +25,97 @@ export const LoginFormSchema = z.object({
   password: z.string().min(1, { message: "Password is required." }).trim(),
 });
 
-export type FormState = {
-  errors?: {
-    name?: string[];
-    email?: string[];
-    password?: string[];
-    server?: string[];
-  };
-  message?: string;
-} | undefined;
+export type FormState =
+  | {
+      errors?: {
+        name?: string[];
+        email?: string[];
+        password?: string[];
+        server?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
 
 export type SessionPayload = {
   userId: number;
   role: string;
   sessionId: number;
   expiresAt: Date;
+};
+
+export const CreateJobFormSchema = z.object({
+  title: z.string().min(1, { message: "Title is required." }).trim(),
+  description: z
+    .string()
+    .min(1, { message: "Description is required." })
+    .trim(),
+  ownerId: z.string().min(1, { message: "Owner Id is required." }).trim(),
+});
+
+export interface ApiResponse {
+  message: string;
+}
+
+// Job-related data interfaces
+export interface JobData {
+  title: string;
+  description: string;
+  ownerId: number | string;
+}
+
+// Update job data interface
+export interface UpdateJobData {
+  title?: string;
+  description?: string;
+  ownerId?: number;
+}
+
+export type Owner = {
+  id: number;
+  name: string;
+  role: string;
+};
+
+// Job interface
+export interface Job {
+  id: number;
+  title: string;
+  description: string;
+  ownerId: number;
+  owner: Owner;
+}
+
+// API response for a single job
+export interface GetJobApiResponse extends ApiResponse {
+  data: Job;
+}
+
+// API response for multiple jobs
+export interface GetAllJobsApiResponse extends ApiResponse {
+  data: Job[];
+}
+
+export interface CreateJobApiResponse extends ApiResponse {
+  data: Job;
+}
+
+export interface UpdateJobApiResponse extends ApiResponse {
+  data: Job;
+}
+
+// User-related interfaces
+export type GetUser = {
+  id: number;
+  name: string;
+  role: string;
+};
+
+// API response for all users
+export type GetAllUsersApiResponse = ApiResponse & {
+  data: GetUser[];
+};
+
+export type ErrorApiResponse = ApiResponse & {
+  error: string | Error;
 };

@@ -1,10 +1,12 @@
-import AdminLayout from "@/components/layout/AdminLayout";
+import { getAllJobs } from "@/app/actions/jobs";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import AdminHome from "@/components/modules/admin-home";
 
-export default function Home(){
+export default async function Home() {
+  const jobs = await getAllJobs();
   return (
-    <AdminLayout>
-      <AdminHome/>
-    </AdminLayout>
-  )
+    <DashboardLayout>
+      <AdminHome jobs={jobs} />
+    </DashboardLayout>
+  );
 }
