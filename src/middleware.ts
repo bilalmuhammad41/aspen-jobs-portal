@@ -1,23 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "@/app/lib/session";
-import { cookies } from "next/headers";
+import { getSessionAction } from "@/app/actions/session";
 
-// Specify protected and public routes
-const protectedRoutes = ["/dashboard"];
+// Specify protected and public routes as regular expressions
+const protectedRoutes = [
+  /^\/dashboard(\/.*)?$/,
+  /^\/dashboard\/admin(\/.*)?$/,
+  /^\/dashboard\/user(\/.*)?$/,
+];
 const publicRoutes = ["/login", "/signup", "/"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  // Decrypt the session from the cookie
-  const cookie = cookies().get("session")?.value;
-  const session = cookie ? await decrypt(cookie) : null;
+  // Get the session using the server action
+  const session = await getSessionAction();
+  console.log(session);
 
   // Check if the user is authenticated
   const isAuthenticated = !!session?.userId;
+  console.log(isAuthenticated);
+
+  // Check if the path is a protected route
+  const isProtectedRoute = protectedRoutes.some((route) => route.test(path));
 
   // Redirect to /login if trying to access protected routes without authentication
-  if (protectedRoutes.includes(path) && !isAuthenticated) {
+  if (isProtectedRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
@@ -29,9 +36,19 @@ export default async function middleware(req: NextRequest) {
   }
 
   // If at /dashboard, redirect based on role
-  if (path === "/dashboard") {
+  if (
+    path === "/dashboard" ||
+    path === "/dashboard/admin" ||
+    path === "/dashboard/user"
+  ) {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
+
     const redirectUrl =
-      session?.role === "ADMIN" ? "/dashboard/admin" : "/dashboard/user";
+      session?.role === "ADMIN"
+        ? "/dashboard/admin/home"
+        : "/dashboard/user/jobs";
     return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
   }
 

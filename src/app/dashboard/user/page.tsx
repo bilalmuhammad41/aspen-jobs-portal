@@ -1,9 +1,5 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
-export default function UserDashboard() {
-  return (
-    <DashboardLayout>
-      <div>User Dashboard</div>
-    </DashboardLayout>
-  );
+export default function UserDashboard({ children }) {
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

@@ -36,24 +36,32 @@ export default function LoginForm() {
                 required
                 placeholder="example@gmail.com"
               />
-              {state?.errors?.email && (
-                <p className="text-sm text-red-500">{state.errors.email[0]}</p>
-              )}
+              {state?.errors &&
+                "email" in state.errors &&
+                state.errors.email && (
+                  <p className="text-sm text-red-500">
+                    {state.errors.email[0]}
+                  </p>
+                )}
             </div>
 
             <div>
               <Label htmlFor="password">Password</Label>
               <Input id="password" name="password" type="password" required />
-              {state?.errors?.password && (
-                <p className="text-sm text-red-500">
-                  {state.errors.password[0]}
-                </p>
-              )}
+              {state?.errors &&
+                "password" in state.errors &&
+                state.errors.password && (
+                  <p className="text-sm text-red-500">
+                    {state.errors.password[0]}
+                  </p>
+                )}
             </div>
 
-            {state?.errors?.server && (
-              <p className="text-sm text-red-500">{state.errors.server[0]}</p>
-            )}
+            {state?.errors &&
+              "server" in state.errors &&
+              state.errors.server && (
+                <p className="text-sm text-red-500">{state.errors.server[0]}</p>
+              )}
 
             <Button type="submit" disabled={pending}>
               {pending ? <LoaderCircle className="w-4 h-4 spinner" /> : "Login"}

@@ -7,7 +7,7 @@ import {
   FormState,
 } from "@/app/lib/definitions";
 import prisma from "../lib/prisma";
-import { createSession, deleteSession } from "../lib/session";
+import { createSessionAction, deleteSessionAction } from "./session";
 import { Role } from "@prisma/client";
 
 export async function signup(state: FormState, formData: FormData) {
@@ -49,7 +49,7 @@ export async function signup(state: FormState, formData: FormData) {
       },
     });
 
-    await createSession(newUser.id);
+    await createSessionAction(newUser.id);
     return { success: true };
   } catch (error) {
     console.log(error);
@@ -96,7 +96,7 @@ export async function login(state: FormState, formData: FormData) {
       };
     }
 
-    await createSession(user.id);
+    await createSessionAction(user.id);
     return { success: true };
   } catch (error) {
     console.log(error);
@@ -107,6 +107,6 @@ export async function login(state: FormState, formData: FormData) {
 }
 
 export async function logout() {
-  deleteSession();
+  await deleteSessionAction();
   return { success: true };
 }

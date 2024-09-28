@@ -7,17 +7,32 @@ import {
   UpdateJobApiResponse,
   JobData,
   GetJobApiResponse,
+  FormState,
+  CreateJobFormSchema,
 } from "../lib/definitions";
 import prisma from "../lib/prisma";
 import { getSession } from "../lib/session";
 
 // Action to create a job
 export async function createJob(
-  data: JobData
-): Promise<CreateJobApiResponse | ErrorApiResponse> {
-  const { title, description, ownerId } = data;
+  // state: FormState,
+  data: FormData
+): Promise<CreateJobApiResponse | ErrorApiResponse | { errors?: any }> {
+  const validatedFields = CreateJobFormSchema.safeParse({
+    title: data?.get("title"),
+    description: data?.get("description"),
+    ownerId: data?.get("ownerId"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { title, description, ownerId } = validatedFields.data;
   const session = await getSession();
-  console.log("Payload: ", data.ownerId);
+  console.log("Create Job Payload: ", validatedFields.data);
 
   // Check for admin permissions
   if (session?.role !== "ADMIN") {
@@ -27,13 +42,29 @@ export async function createJob(
     };
   }
 
+  if (!session) {
+    return {
+      message: "Could not create a job",
+      error: "Session not found. Please log in.",
+    };
+  }
+
+  // Check for admin permissions
+  if (session.role !== "ADMIN") {
+    return {
+      message: "Could not create a job",
+      error: "You do not have permission to create a Job",
+    };
+  }
+
   try {
+    console.log(prisma);
     const job = await prisma.job.create({
       data: {
         title,
         description,
         ownerId: Number(ownerId),
-        adminId: session.userId, // Assuming you have adminId field in the Job model
+        adminId: session.userId,
       },
       select: {
         id: true,
@@ -49,7 +80,6 @@ export async function createJob(
         },
       },
     });
-
     return {
       message: "Job created Successfully",
       data: job,

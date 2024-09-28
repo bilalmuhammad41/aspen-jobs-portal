@@ -27,23 +27,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useFormState } from "react-dom";
 import { createJob } from "@/app/actions/jobs";
+import { ErrorApiResponse } from "@/app/lib/definitions";
 
-export default function CreateJobForm({
-  users,
-}: {
-  users: GetAllUsersApiResponse;
-}) {
+export default function CreateJobForm({ users }) {
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission
+
     const formData = new FormData(event.target);
-    const data = {
-      title: formData.get("title"),
-      description: formData.get("description"),
-      ownerId: formData.get("ownerId"),
-    };
-    const response = await createJob(data); // Call the server action
-    // Handle response (e.g., show success message, close dialog, etc.)
+
+    console.log(formData);
+    try {
+      const response = await fetch("/api/jobs", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+    } catch (error) {
+      console.error("Error creating job:", error);
+    }
   };
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

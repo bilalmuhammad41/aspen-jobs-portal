@@ -10,12 +10,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const formData = await request.formData();
-  const jobData: JobData = {
-    title: formData.get("title") as string,
-    description: formData.get("description") as string,
-    ownerId: formData.get("ownerId") as string,
-  };
 
-  const job = await createJob(jobData);
+  const job = await createJob(formData);
   return NextResponse.json(job);
 }
