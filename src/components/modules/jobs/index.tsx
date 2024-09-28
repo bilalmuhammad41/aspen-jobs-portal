@@ -19,10 +19,13 @@ import { getAllUsers } from "@/app/actions/user";
 import { ErrorApiResponse } from "@/app/lib/definitions";
 import CreateJobForm from "./create-job-form";
 import AllJobsList from "./all-jobs-list";
+import { getSession } from "@/app/lib/session";
 
 export default async function JobsModule() {
   const jobs = await getAllJobs();
   const users = await getAllUsers();
+  const session = await getSession();
+  const role = session.role;
 
   return (
     <>
@@ -30,9 +33,11 @@ export default async function JobsModule() {
         <CardHeader className="">
           <CardTitle className="flex justify-between w-full items-center">
             Aspen Jobs
-            <div className="flex gap-4">
-              <CreateJobForm users={users} />
-            </div>
+            {role === "ADMIN" && (
+              <div className="flex gap-4">
+                <CreateJobForm users={users} />
+              </div>
+            )}
           </CardTitle>
 
           <CardDescription>View and manage all jobs.</CardDescription>

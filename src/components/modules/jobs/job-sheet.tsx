@@ -24,7 +24,7 @@ export default function JobSheet({ job }) {
 
   return (
     <>
-      <Button className="w-full" variant="ghost" onClick={handleOpen}>
+      <Button className="w-full" variant="link" onClick={handleOpen}>
         View
       </Button>
 

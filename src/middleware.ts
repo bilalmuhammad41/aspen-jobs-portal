@@ -14,11 +14,9 @@ export default async function middleware(req: NextRequest) {
 
   // Get the session using the server action
   const session = await getSessionAction();
-  console.log(session);
 
   // Check if the user is authenticated
   const isAuthenticated = !!session?.userId;
-  console.log(isAuthenticated);
 
   // Check if the path is a protected route
   const isProtectedRoute = protectedRoutes.some((route) => route.test(path));
