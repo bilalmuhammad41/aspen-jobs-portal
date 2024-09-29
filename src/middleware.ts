@@ -35,6 +35,7 @@ export default async function middleware(req: NextRequest) {
 
   // If at /dashboard, redirect based on role
   if (
+    path === "/" ||
     path === "/dashboard" ||
     path === "/dashboard/admin" ||
     path === "/dashboard/user"
