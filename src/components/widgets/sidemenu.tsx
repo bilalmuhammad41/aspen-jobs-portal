@@ -1,11 +1,6 @@
 import {
-  Home,
-  LineChart,
   Menu,
-  ShoppingCart,
-  Users,
 } from "lucide-react";
-import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import DashboardNav from "./nav-link";

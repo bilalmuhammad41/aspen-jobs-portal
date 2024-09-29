@@ -1,11 +1,7 @@
 import Link from "next/link";
 import {
   Bell,
-  LineChart,
   Package2,
-  ShoppingCart,
-  Users,
-  Home,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
