@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Mail, Users } from "lucide-react";
+import { LoaderCircle, Mail, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import StakeholderService from "@/services/stakeholder.service";
@@ -34,11 +34,13 @@ const StakeholdersList = ({ job }: { job: Job }) => {
   );
 
   const handleBecomeStakeholder = async () => {
-    handleBecomeStakeholderRequest(job?.id);
-    if (isSuccess) {
-      setIsConfirmDialogOpen(false);
-    }
+    await handleBecomeStakeholderRequest(job?.id);
   };
+  useEffect(() => {
+    if (isSuccess) {
+      setIsConfirmDialogOpen(false)
+    }
+  }, [isSuccess])
 
   const totalStakeholders =
     (job?.jobStakeholders?.length || 0) +
@@ -90,7 +92,7 @@ const StakeholdersList = ({ job }: { job: Job }) => {
           <Button
             disabled={isUserStakeholder || isPending} // Disable if the user is already a stakeholder or if the request is pending
           >
-            {isUserStakeholder ? "Already a member" : "Become a Stakeholder"}
+            {isUserStakeholder ? "You are a Stakeholder" : "Become a Stakeholder"}
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -108,7 +110,9 @@ const StakeholdersList = ({ job }: { job: Job }) => {
               Cancel
             </Button>
             <Button disabled={isPending} onClick={handleBecomeStakeholder}>
-              Confirm
+              {isPending ?
+              <LoaderCircle className="animate-spin"/>:
+              "Confirm"}
             </Button>
           </DialogFooter>
         </DialogContent>

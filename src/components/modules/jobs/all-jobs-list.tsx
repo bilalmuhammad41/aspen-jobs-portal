@@ -111,7 +111,7 @@ export const columns: ColumnDef<Job>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return <div className="flex items-center w-[100px]">
-        <JobSheet jobId={row.original.id} />;
+        <JobSheet jobId={row.original.id} />
       </div>
     },
   },

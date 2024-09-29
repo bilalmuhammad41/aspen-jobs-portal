@@ -37,25 +37,21 @@ export default function JobSheet({ jobId }: { jobId: number }) {
     setIsOpen(true);
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        <LoaderCircle className="animate-spin" />
-      </div>
-    );
-  }
+ 
 
   const job: Job | undefined = jobData?.data;
   const userVote = job?.userVote || null;
 
   if (!job) {
-    return null; // or some error state
+    return null;
   }
 
   return (
     <>
-      <Button className="w-full bg-green-500 text-white font-[500] hover:bg-green-400" variant={'secondary'} onClick={handleOpen}>
-        View
+      <Button disabled={isLoading} className="w-full bg-green-500 text-white font-[500] hover:bg-green-400" variant={'secondary'} onClick={handleOpen}>
+        {isLoading? 
+         <LoaderCircle className="animate-spin" />
+         : "View"}
       </Button>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
