@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export default function SignupForm() {
   const [state, action] = useFormState(signup, undefined);
-  if (state) {
+  if (state?.success) {
     redirect("/dashboard");
   }
   const { pending } = useFormStatus();
