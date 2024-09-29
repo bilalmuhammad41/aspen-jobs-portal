@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { getSession } from "@/app/lib/session";
 import SideMenu from "../widgets/sidemenu";
 import TopNav from "../widgets/top-nav";
+import DashboardNav from "../widgets/nav-link";
 
 export const description =
   "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action.";
@@ -34,44 +35,7 @@ export default async function DashboardLayout({ children }: {children:React.Reac
               <span className="sr-only">Toggle notifications</span>
             </Button>
           </div>
-          <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              {role === "ADMIN" && (
-                <Link
-                  href="/dashboard/admin/home"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <Home className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              )}
-              <Link
-                href="/dashboard/admin/jobs"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                Jobs
-              </Link>
-              {role === "ADMIN" && (
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <Users className="h-4 w-4" />
-                  Stakeholders
-                </Link>
-              )}
-              {role === "ADMIN" && (
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <LineChart className="h-4 w-4" />
-                  Analytics
-                </Link>
-              )}
-            </nav>
-          </div>
+         <DashboardNav role={role}/>
         </div>
       </div>
       <div className="flex flex-col">
