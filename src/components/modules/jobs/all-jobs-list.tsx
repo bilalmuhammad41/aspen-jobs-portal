@@ -18,8 +18,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -32,7 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import JobSheet from "./job-sheet";
-import { LoaderCircle, MoreHorizontal } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import JobsService from "@/services/job.service";
 import { Job } from "@/app/lib/definitions";
 
@@ -127,7 +125,7 @@ export default function AllJobsList() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { useFetchAllJobs } = JobsService();
-  const { data: jobs, isLoading, isError } = useFetchAllJobs();
+  const { data: jobs, isLoading } = useFetchAllJobs();
 
   const table = useReactTable({
     data: jobs?.data || [],

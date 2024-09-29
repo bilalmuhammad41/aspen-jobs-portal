@@ -22,15 +22,16 @@ export default function JobSheet({ jobId }: { jobId: number }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { useHandleAddVote } = VoteService();
-  const { mutate: handleUpdateVote } = useHandleAddVote();
+  const { mutate: handleUpdateVote } = useHandleAddVote(jobId);
 
   const handleVote = (voteType: VoteType) => {
     handleUpdateVote({ jobId: jobId, voteType });
   };
 
   const { useFetchSingleJob } = JobsService();
-  const { data: jobData, isLoading, isSuccess } = useFetchSingleJob(jobId);
+  const { data: jobData, isLoading,} = useFetchSingleJob(jobId);
 
+ 
   const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(true);

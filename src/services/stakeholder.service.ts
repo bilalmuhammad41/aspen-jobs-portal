@@ -1,15 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import {
-  CreateJob,
-  GetAllJobsApiResponse,
   GetJobApiResponse,
   GetJobStakeholdersApiResponse,
-  Job,
-  UpdateJobData,
 } from "@/app/lib/definitions";
 import { toast } from "sonner";
-import { VoteType } from "@prisma/client";
 
 const API_URL = "/api/stakeholder";
 

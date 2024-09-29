@@ -6,9 +6,17 @@ import { toast } from "sonner";
 const API_URL = "/api/vote";
 
 const VoteService = () => {
-  const useHandleAddVote = () => {
+  const useHandleAddVote = (jobId: number) => {
     const queryClient = useQueryClient();
-
+    const onSuccess = () => {
+      console.log("Job Id: ", jobId);
+      //  queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["job", jobId] });
+      queryClient.invalidateQueries({
+        queryKey: ["userVote", jobId],
+      });
+      toast.success("Vote recorded successfully");
+    };
     return useMutation({
       mutationFn: async ({
         jobId,
@@ -20,15 +28,8 @@ const VoteService = () => {
         const response = await axios.post(API_URL, { jobId, voteType });
         return response.data;
       },
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries({ queryKey: ["jobs"] });
-        queryClient.invalidateQueries({ queryKey: ["job", variables.jobId] });
-        queryClient.invalidateQueries({
-          queryKey: ["userVote", variables.jobId],
-        });
-        toast.success("Vote recorded successfully");
-      },
-      onError: (error) => {
+      onSuccess: onSuccess,
+      onError: () => {
         toast.error("Failed to record vote");
       },
     });
@@ -46,7 +47,7 @@ const VoteService = () => {
     });
   };
 
-  const useDeleteVote = (jobId: number) => {
+  const useDeleteVote = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -62,7 +63,7 @@ const VoteService = () => {
         });
         toast.success("Unvote successful");
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Failed to  unvote");
       },
     });

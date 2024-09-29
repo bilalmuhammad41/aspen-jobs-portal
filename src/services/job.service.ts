@@ -1,25 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import {
-  CreateJob,
   GetAllJobsApiResponse,
   GetJobApiResponse,
-  Job,
-  UpdateJobData,
 } from "@/app/lib/definitions";
-import { z } from "zod";
 import { toast } from "sonner";
 import { VoteType } from "@prisma/client";
 
 const API_URL = "/api/jobs";
-
-const CreateJobFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  ownerId: z.string().min(1, "Owner ID is required"),
-});
-
-type CreateJobFormData = z.infer<typeof CreateJobFormSchema>;
 
 const JobsService = () => {
   const useFetchAllJobs = (

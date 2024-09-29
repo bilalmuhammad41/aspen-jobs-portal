@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getAllJobs } from "@/app/actions/jobs";
 import { getAllUsers } from "@/app/actions/user";
 import CreateJobForm from "./create-job-form";
 import AllJobsList from "./all-jobs-list";
@@ -16,7 +15,6 @@ export default async function JobsModule() {
   const users = await getAllUsers();
   const session = await getSession();
   const role = session?.role;
-  const userId = session?.userId;
 
   return (
     <>

@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import StakeholderService from "@/services/stakeholder.service";
 import { Card } from "@/components/ui/card";
-import { Job, JobData } from "@/app/lib/definitions";
-import JobsService from "@/services/job.service";
+import { Job } from "@/app/lib/definitions";
+import { useSessionStore } from "@/provider/session-store-provider";
 
 const StakeholdersList = ({ job }: { job: Job }) => {
   const [isStakeholderDialogOpen, setIsStakeholderDialogOpen] = useState(false);
@@ -26,6 +26,12 @@ const StakeholdersList = ({ job }: { job: Job }) => {
     isPending,
     isSuccess,
   } = useHandleBecomeStakeholder(job?.id);
+
+  const userId = useSessionStore((state) => state.userId);
+
+  const isUserStakeholder = job?.jobStakeholders?.some(
+    (stakeholder) => stakeholder?.user?.id == userId
+  );
 
   const handleBecomeStakeholder = async () => {
     handleBecomeStakeholderRequest(job?.id);
@@ -81,7 +87,11 @@ const StakeholdersList = ({ job }: { job: Job }) => {
 
       <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
         <DialogTrigger asChild>
-          <Button>Become a Stakeholder</Button>
+          <Button
+            disabled={isUserStakeholder || isPending} // Disable if the user is already a stakeholder or if the request is pending
+          >
+            {isUserStakeholder ? "Already a member" : "Become a Stakeholder"}
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
