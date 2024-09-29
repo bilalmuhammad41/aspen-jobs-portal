@@ -1,13 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Card,
   CardHeader,
@@ -18,43 +12,45 @@ import {
 import { useState } from "react";
 import CommentsList from "./comments-list";
 import VoteService from "@/services/vote.service";
+import { LoaderCircle, ThumbsDown, ThumbsUp } from "lucide-react";
+import StakeholdersList from "./stakeholder-list";
+import JobsService from "@/services/job.service";
+import { VoteType } from "@prisma/client";
+import { Job } from "@/app/lib/definitions";
 
-export default function JobSheet({ job }) {
-  const [isOpen, setIsOpen] = useState(false); // Manage sheet open state
-  const [upvotes, setUpvotes] = useState(job.upvotes || 0);
-  const [downvotes, setDownvotes] = useState(job.downvotes || 0);
-  const [userVote, setUserVote] = useState(job.userVote || null); // Tracks user's current vote (UPVOTE, DOWNVOTE, or null)
+export default function JobSheet({ jobId }: { jobId: number }) {
+  const [isOpen, setIsOpen] = useState(false);
 
   const { useHandleAddVote } = VoteService();
   const { mutate: handleUpdateVote } = useHandleAddVote();
 
-  const handleVote = (voteType) => {
-    // Backend will handle deletion of the previous vote if it's the same
-    if (userVote === voteType) {
-      // Unselecting the vote
-      setUserVote(null);
-    } else {
-      // Switching or casting a new vote
-      setUserVote(voteType);
-    }
-
-    // Update the vote count locally based on the vote type
-    if (voteType === "UPVOTE") {
-      setUpvotes(upvotes + (userVote === "UPVOTE" ? -1 : 1));
-      if (userVote === "DOWNVOTE") setDownvotes(downvotes - 1); // Remove previous downvote if switching
-    } else if (voteType === "DOWNVOTE") {
-      setDownvotes(downvotes + (userVote === "DOWNVOTE" ? -1 : 1));
-      if (userVote === "UPVOTE") setUpvotes(upvotes - 1); // Remove previous upvote if switching
-    }
-
-    // Send the vote to the backend
-    handleUpdateVote({ jobId: job.id, voteType });
+  const handleVote = (voteType: VoteType) => {
+    handleUpdateVote({ jobId: jobId, voteType });
   };
 
-  const handleOpen = (e) => {
-    e.stopPropagation(); // Prevent event from bubbling up to the dropdown
+  const { useFetchSingleJob } = JobsService();
+  const { data: jobData, isLoading, isSuccess } = useFetchSingleJob(jobId);
+
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <LoaderCircle className="animate-spin" />
+      </div>
+    );
+  }
+
+  const job: Job | undefined = jobData?.data;
+  const userVote = job?.userVote || null;
+
+  if (!job) {
+    return null; // or some error state
+  }
+
   return (
     <>
       <Button className="w-full" variant="link" onClick={handleOpen}>
@@ -63,44 +59,55 @@ export default function JobSheet({ job }) {
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent
-          className="sm:max-w-[500px] gap-4 flex flex-col overflow-y-scroll"
+          className="sm:max-w-[500px] gap-4 flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Prevent closing on click inside */}
           <Card>
             <CardHeader>
-              <CardTitle>{job.title}</CardTitle>
-              <CardDescription>{job.description}</CardDescription>
+              <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
+              <CardDescription className="text-base">
+                {job.description}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <Label>Owner</Label>
-              <div>{job.owner.name}</div>
-              {/* Upvote and Downvote Buttons */}
-              <div className="flex space-x-4 mt-4">
-                <Button
-                  variant={userVote === "UPVOTE" ? "solid" : "outline"}
-                  className={`text-green-500 border-green-500 ${
-                    userVote === "UPVOTE"
-                      ? "bg-green-100"
-                      : "hover:bg-green-100"
-                  }`}
-                  onClick={() => handleVote("UPVOTE")}
-                >
-                  Upvote {upvotes}
-                </Button>
-                <Button
-                  variant={userVote === "DOWNVOTE" ? "solid" : "outline"}
-                  className={`text-red-500 border-red-500 ${
-                    userVote === "DOWNVOTE" ? "bg-red-100" : "hover:bg-red-100"
-                  }`}
-                  onClick={() => handleVote("DOWNVOTE")}
-                >
-                  Downvote {downvotes}
-                </Button>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">
+                    Owner
+                  </Label>
+                  <div className="text-lg font-semibold">
+                    {job.owner.name}
+                  </div>
+                </div>
+                <div className="flex space-x-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`flex items-center space-x-2 ${
+                      userVote === "UPVOTE" ? "bg-green-100 text-green-600" : ""
+                    }`}
+                    onClick={() => handleVote("UPVOTE")}
+                  >
+                    <ThumbsUp className="w-4 h-4" />
+                    <span>{job.upvotes}</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`flex items-center space-x-2 ${
+                      userVote === "DOWNVOTE" ? "bg-red-100 text-red-600" : ""
+                    }`}
+                    onClick={() => handleVote("DOWNVOTE")}
+                  >
+                    <ThumbsDown className="w-4 h-4" />
+                    <span>{job.downvotes}</span>
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
-          <CommentsList />
+          <StakeholdersList job={job} />
+          <CommentsList comments={job.comments} />
         </SheetContent>
       </Sheet>
     </>

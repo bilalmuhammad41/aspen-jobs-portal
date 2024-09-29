@@ -34,17 +34,8 @@ import {
 import JobSheet from "./job-sheet";
 import { LoaderCircle, MoreHorizontal } from "lucide-react";
 import JobsService from "@/services/job.service";
+import { Job } from "@/app/lib/definitions";
 
-export type Job = {
-  id: number;
-  title: string;
-  description: string;
-  owner: {
-    id: number;
-    name: string;
-    role: string;
-  };
-};
 
 export const columns: ColumnDef<Job>[] = [
   {
@@ -117,22 +108,7 @@ export const columns: ColumnDef<Job>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[150px]" align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <JobSheet job={row.original} />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <JobSheet jobId={row.original.id} />;
     },
   },
 ];

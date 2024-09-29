@@ -1,11 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import { CreateJob, GetAllJobsApiResponse, GetJobApiResponse, Job, UpdateJobData } from '@/app/lib/definitions';
-import { z } from 'zod';
-import { toast } from 'sonner';
-import { VoteType } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import {
+  CreateJob,
+  GetAllJobsApiResponse,
+  GetJobApiResponse,
+  Job,
+  UpdateJobData,
+} from "@/app/lib/definitions";
+import { z } from "zod";
+import { toast } from "sonner";
+import { VoteType } from "@prisma/client";
 
-const API_URL = '/api/jobs';
+const API_URL = "/api/jobs";
 
 const CreateJobFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -16,7 +22,11 @@ const CreateJobFormSchema = z.object({
 type CreateJobFormData = z.infer<typeof CreateJobFormSchema>;
 
 const JobsService = () => {
-  const useFetchAllJobs = (page?: number, limit?: number, searchQuery?: string) => {
+  const useFetchAllJobs = (
+    page?: number,
+    limit?: number,
+    searchQuery?: string
+  ) => {
     async function fetchAllJobs(): Promise<GetAllJobsApiResponse> {
       const response = await axios.get(API_URL);
       return response.data;
@@ -29,7 +39,7 @@ const JobsService = () => {
   };
 
   const useFetchSingleJob = (id: string | number | null) => {
-    function fetchJob(): Promise<GetJobApiResponse> {
+    async function fetchJob(): Promise<GetJobApiResponse> {
       return axios.get(`${API_URL}/${id}`).then((res) => res.data);
     }
 
@@ -98,8 +108,18 @@ const JobsService = () => {
 
   const useHandleAddVote = () => {
     const queryClient = useQueryClient();
-    async function handleVoteJob({ jobId, userId, voteType }: { jobId: number; userId: number; voteType: VoteType }): Promise<any> {
-      return axios.post(`${API_URL}/${jobId}/vote`, { userId, voteType }).then((res) => res.data);
+    async function handleVoteJob({
+      jobId,
+      userId,
+      voteType,
+    }: {
+      jobId: number;
+      userId: number;
+      voteType: VoteType;
+    }): Promise<any> {
+      return axios
+        .post(`${API_URL}/${jobId}/vote`, { userId, voteType })
+        .then((res) => res.data);
     }
 
     return useMutation({

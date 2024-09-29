@@ -1,3 +1,4 @@
+import { User, VoteType } from "@prisma/client";
 import Error from "next/error";
 import { z } from "zod";
 
@@ -76,20 +77,13 @@ export type Owner = {
 };
 
 // Job interface
-export interface Job {
-  id: number;
-  title: string;
-  description: string;
-  ownerId: number;
-  owner: Owner;
-}
 
 export type CreateJob = {
-  
   title: string;
   description: string;
   ownerId: number;
-}
+};
+
 // API response for a single job
 export interface GetJobApiResponse extends ApiResponse {
   data: Job;
@@ -122,4 +116,74 @@ export type GetAllUsersApiResponse = ApiResponse & {
 
 export type ErrorApiResponse = ApiResponse & {
   error: string | Error;
+};
+
+
+export type GetJobStakeholdersApiResponse = {
+  data: JobStakeholder[];
+};
+
+
+export type Job = {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt?: string;
+  upvotes: number;
+  downvotes: number;
+  owner: {
+    id: number;
+    name: string;
+    role: 'ADMIN' | 'STAKEHOLDER'; // Based on your Role enum
+  };
+  admin: {
+    id: number;
+    name: string;
+    role: 'ADMIN' | 'STAKEHOLDER';
+  };
+  comments: Comment[];
+  votes: Vote[];
+  jobStakeholders: JobStakeholder[];
+  externalStakeholders: ExternalJobStakeholder[]; 
+  userVote: VoteType;
+};
+
+export type Comment = {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt?: string;
+  user: {
+    id: number;
+    name: string;
+  };
+};
+
+export type Vote = {
+  id: number;
+  voteType: 'UPVOTE' | 'DOWNVOTE';
+  user: {
+    id: number;
+    name: string;
+  };
+};
+
+export type JobStakeholder = {
+  jobId: number;
+  user: {
+    id: number;
+    name: string;
+    email:string
+  };
+};
+
+export type ExternalJobStakeholder = {
+  jobId: number;
+  externalStakeholder: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  user: User
 };

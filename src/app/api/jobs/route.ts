@@ -26,7 +26,18 @@ export async function GET(request: NextRequest) {
             },
           },
           comments: true,
-          jobStakeholders: true,
+          jobStakeholders: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          externalStakeholders: true,
           upvotes: true,
           downvotes: true,
         },
@@ -72,7 +83,18 @@ export async function GET(request: NextRequest) {
             },
           },
           comments: true,
-          jobStakeholders: true,
+          jobStakeholders: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          externalStakeholders: true,
           upvotes: true,
           downvotes: true,
         },

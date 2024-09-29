@@ -33,20 +33,21 @@ model Session {
 }
 
 model Job {
-  id              Int              @id @default(autoincrement())
-  title           String
-  description     String
-  createdAt       DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime?        @db.Timestamptz(6)
-  adminId         Int
-  admin           User             @relation("PostedJobs", fields: [adminId], references: [id])
-  ownerId         Int
-  owner           User             @relation("OwnedJobs", fields: [ownerId], references: [id])
-  comments        Comment[]        @relation("JobComments")
-  votes           Vote[]
-  jobStakeholders JobStakeholder[]
-  upvotes         Int              @default(0)
-  downvotes       Int              @default(0)
+  id                   Int                      @id @default(autoincrement())
+  title                String
+  description          String
+  createdAt            DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime?                @db.Timestamptz(6)
+  adminId              Int
+  admin                User                     @relation("PostedJobs", fields: [adminId], references: [id])
+  ownerId              Int
+  owner                User                     @relation("OwnedJobs", fields: [ownerId], references: [id])
+  comments             Comment[]                @relation("JobComments")
+  votes                Vote[]
+  jobStakeholders      JobStakeholder[]
+  externalStakeholders ExternalJobStakeholder[]
+  upvotes              Int                      @default(0)
+  downvotes            Int                      @default(0)
 }
 
 model Comment {
@@ -79,6 +80,24 @@ model JobStakeholder {
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([jobId, userId])
+}
+
+model ExternalStakeholder {
+  id        Int                      @id @default(autoincrement())
+  name      String
+  email     String                   @unique
+  createdAt DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime?                @db.Timestamptz(6)
+  jobLinks  ExternalJobStakeholder[]
+}
+
+model ExternalJobStakeholder {
+  jobId                 Int
+  job                   Job                 @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  externalStakeholderId Int
+  externalStakeholder   ExternalStakeholder @relation(fields: [externalStakeholderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([jobId, externalStakeholderId])
 }
 
 enum Role {

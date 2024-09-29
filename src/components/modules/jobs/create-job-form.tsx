@@ -24,7 +24,7 @@ import { PlusCircleIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import JobsService, { useCreateJob } from "@/services/job.service";
+import JobsService from "@/services/job.service";
 
 export default function CreateJobForm({ users }) {
   const { useHandleCreateJob } = JobsService();
