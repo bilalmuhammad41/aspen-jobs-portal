@@ -67,9 +67,15 @@ export default function LoginForm() {
               {pending ? <LoaderCircle className="w-4 h-4 spinner" /> : "Login"}
             </Button>
           </form>
-          <p>
-            Don&apos;t have an account? <Link href="/signup">Signup</Link>
-          </p>
+          <div className="flex flex-no-wrap w-full gap-4 items-center py-5">
+            <div className="h-[1px] bg-gray-400 flex-1"></div>
+            <p className="self-center text-[14px] text-gray-400">
+              Don&apos;t have an account?
+            </p>
+            <div className="h-[1px] bg-gray-400 flex-1"></div>
+          </div>
+          <Link href="/signup" className="w-full"><Button className="w-full border-gray-500" variant="outline">Signup</Button></Link>
+
         </CardContent>
       </Card>
     </div>

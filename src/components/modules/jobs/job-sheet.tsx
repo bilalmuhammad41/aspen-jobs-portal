@@ -54,7 +54,7 @@ export default function JobSheet({ jobId }: { jobId: number }) {
 
   return (
     <>
-      <Button className="w-full" variant="link" onClick={handleOpen}>
+      <Button className="w-full bg-green-500 text-white font-[500] hover:bg-green-400" variant={'secondary'} onClick={handleOpen}>
         View
       </Button>
 

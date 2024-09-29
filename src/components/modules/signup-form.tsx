@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
 import { LoaderCircle } from "lucide-react";
 import { redirect } from "next/navigation";
+import { Label } from "../ui/label";
 
 export default function SignupForm() {
   const [state, action] = useFormState(signup, undefined);
@@ -20,26 +21,41 @@ export default function SignupForm() {
         <CardHeader className="text-2xl font-bold">Signup</CardHeader>
         <CardContent className="flex flex-col gap-4">
           <form className="flex flex-col gap-4" action={action}>
-            <label htmlFor="name">Name</label>
-            <Input id="name" name="name" type="text" />
-            {state?.errors?.name && <p>{state.errors.name}</p>}
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" name="name" type="text" />
+              {state?.errors && "name" in state.errors && state.errors.name && <p>{state.errors.name}</p>}
+            </div>
 
-            <label htmlFor="email">Email</label>
-            <Input id="email" name="email" type="email" />
-            {state?.errors?.email && <p>{state.errors.email}</p>}
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="example@gmail.com"
+              />
+              {state?.errors &&
+                "email" in state.errors &&
+                state.errors.email && (
+                  <p className="text-sm text-red-500">
+                    {state.errors.email[0]}
+                  </p>
+                )}
+            </div>
 
-            <label htmlFor="password">Password</label>
-            <Input id="password" name="password" type="password" />
-            {state?.errors?.password && (
-              <div>
-                <p>Password must:</p>
-                <ul>
-                  {state.errors.password.map((error) => (
-                    <li key={error}>- {error}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" required />
+              {state?.errors &&
+                "password" in state.errors &&
+                state.errors.password && (
+                  <p className="text-sm text-red-500">
+                    {state.errors.password[0]}
+                  </p>
+                )}
+            </div>
             <Button type="submit">
               {pending ? (
                 <LoaderCircle className="w-4 h-4 spinner" />
@@ -48,9 +64,14 @@ export default function SignupForm() {
               )}
             </Button>
           </form>
-          <p>
-            Already a member? <Link href="/login">Login</Link>
-          </p>
+          <div className="flex flex-no-wrap w-full gap-4 py-5 items-center">
+            <div className="h-[1px] bg-gray-400 flex-1 "></div>
+            <p className="self-center text-[14px] text-gray-400">
+             Already a member?
+            </p>
+            <div className="h-[1px] bg-gray-400 flex-1"></div>
+          </div>
+            <Link href="/login" className="w-full"><Button className="w-full border-gray-400" variant="outline">Login</Button></Link>
         </CardContent>
       </Card>
     </div>

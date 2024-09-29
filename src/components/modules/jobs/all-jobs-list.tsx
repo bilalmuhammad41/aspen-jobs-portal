@@ -4,12 +4,16 @@ import * as React from "react";
 import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -86,7 +90,7 @@ export const columns: ColumnDef<Job>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
+    cell: ({ row }) => <div className="max-w-[300px]">{row.getValue("description")}</div>,
   },
   {
     accessorKey: "owner.name",
@@ -106,7 +110,9 @@ export const columns: ColumnDef<Job>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      return <JobSheet jobId={row.original.id} />;
+      return <div className="flex items-center w-[100px]">
+        <JobSheet jobId={row.original.id} />;
+      </div>
     },
   },
 ];
@@ -130,6 +136,7 @@ export default function AllJobsList() {
   const table = useReactTable({
     data: jobs?.data || [],
     columns,
+    
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -146,6 +153,11 @@ export default function AllJobsList() {
       rowSelection,
       pagination,
     },
+    defaultColumn: {
+      size: 200,
+      minSize: 50, 
+      maxSize: 500, 
+      },
   });
 
   return (
