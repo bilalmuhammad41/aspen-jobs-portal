@@ -8,26 +8,30 @@ import JobsService from "@/services/job.service";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import CommentItem from "./comment-item";
+import CommentService from "@/services/comment.service";
 
 interface CommentsListProps {
   jobId: number;
 }
 
 export default function CommentsList({ jobId }: CommentsListProps) {
-  const { useFetchAllJobComments, useHandleAddComment } = JobsService();
+  const { useFetchAllJobComments } = JobsService();
+  const { useHandleAddComment, useHandleDeleteComment} = CommentService()
   const { mutate: handleAddCommentApi, isPending: isAddComment } = useHandleAddComment(jobId);
   const [newComment, setNewComment] = useState<string>("");
   const [isFormVisible, setIsFormVisible] = useState(false);
   const { data: comments, isLoading } = useFetchAllJobComments(jobId);
-
+  const{ mutate: handleDeleteComment, isPending} = useHandleDeleteComment(jobId)
   
 
   const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('content', newComment);
+    formData.append('jobId', String(jobId));
     handleAddCommentApi(formData);
     setNewComment("");
+    setIsFormVisible(false)
   };
 
   return (
@@ -79,7 +83,7 @@ export default function CommentsList({ jobId }: CommentsListProps) {
             <div className="space-y-6 max-[1440px]:max-h-[210px]">
               {comments && comments?.data.length > 0 ? (
                 comments?.data?.map((comment: Comment, index: number) => (
-                  <CommentItem key={index} comment={comment}/>
+                  <CommentItem key={index} comment={comment} deleteComment = {handleDeleteComment}/>
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-4">
