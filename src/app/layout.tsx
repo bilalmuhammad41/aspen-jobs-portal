@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
-
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import TanstackProvider from "@/provider/tanstack-provider";
 import { SessionStoreProvider } from "@/provider/session-store-provider";
-import SessionInitializer from "@/components/session-intializer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,6 +34,7 @@ export default async function RootLayout({
       >
         <SessionStoreProvider>
           <TanstackProvider>
+            <SpeedInsights/>
             {children}
             <Toaster />
           </TanstackProvider>
