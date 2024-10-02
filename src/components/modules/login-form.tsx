@@ -9,24 +9,55 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { LoaderCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
+
+interface LoginState {
+  success?: boolean;
+  errors?: {
+    email?: string[];
+    password?: string[];
+    server?: string[];
+  };
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  console.log("SubmitButton - Pending state:", pending);
+
+  return (
+    <Button type="submit" disabled={pending} className="relative">
+      {pending && (
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      )}
+      {pending ? "Logging in..." : "Login"}
+    </Button>
+  );
+}
+
 export default function LoginForm() {
   const router = useRouter();
-  const [state, formAction] = useFormState(login, undefined);
-  const { pending } = useFormStatus();
+  const [state, formAction] = useFormState<LoginState, FormData>(login, { errors: {} });
 
   useEffect(() => {
+    console.log("LoginForm - Current state:", state);
     if (state?.success) {
+      console.log("LoginForm - Login successful, redirecting to dashboard");
       router.push("/dashboard");
     }
   }, [state, router]);
+
+  const handleSubmit = (formData: FormData) => {
+    console.log("LoginForm - Form submitted");
+    formAction(formData);
+  };
 
   return (
     <div>
       <Card className="w-[400px]">
         <CardHeader className="text-2xl font-bold">Login</CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <form action={formAction} className="flex flex-col gap-4">
+          <form action={handleSubmit} className="flex flex-col gap-4">
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
@@ -36,36 +67,24 @@ export default function LoginForm() {
                 required
                 placeholder="example@gmail.com"
               />
-              {state?.errors &&
-                "email" in state.errors &&
-                state.errors.email && (
-                  <p className="text-sm text-red-500">
-                    {state.errors.email[0]}
-                  </p>
-                )}
+              {state.errors?.email && (
+                <p className="text-sm text-red-500">{state.errors.email[0]}</p>
+              )}
             </div>
 
             <div>
               <Label htmlFor="password">Password</Label>
               <Input id="password" name="password" type="password" required />
-              {state?.errors &&
-                "password" in state.errors &&
-                state.errors.password && (
-                  <p className="text-sm text-red-500">
-                    {state.errors.password[0]}
-                  </p>
-                )}
+              {state.errors?.password && (
+                <p className="text-sm text-red-500">{state.errors.password[0]}</p>
+              )}
             </div>
 
-            {state?.errors &&
-              "server" in state.errors &&
-              state.errors.server && (
-                <p className="text-sm text-red-500">{state.errors.server[0]}</p>
-              )}
+            {state.errors?.server && (
+              <p className="text-sm text-red-500">{state.errors.server[0]}</p>
+            )}
 
-            <Button type="submit" disabled={pending}>
-              {pending ? <LoaderCircle className="w-4 h-4 spinner" /> : "Login"}
-            </Button>
+            <SubmitButton />
           </form>
           <div className="flex flex-no-wrap w-full gap-4 items-center py-5">
             <div className="h-[1px] bg-gray-400 flex-1"></div>
@@ -74,8 +93,11 @@ export default function LoginForm() {
             </p>
             <div className="h-[1px] bg-gray-400 flex-1"></div>
           </div>
-          <Link href="/signup" className="w-full"><Button className="w-full border-gray-500" variant="outline">Signup</Button></Link>
-
+          <Link href="/signup" className="w-full">
+            <Button className="w-full border-gray-500" variant="outline">
+              Signup
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>
