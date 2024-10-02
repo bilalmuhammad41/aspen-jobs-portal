@@ -3,6 +3,8 @@ import axios, { AxiosError } from "axios";
 import {
   GetAllJobsApiResponse,
   GetJobApiResponse,
+  Comment,
+  CommentApiResponse,
 } from "@/app/lib/definitions";
 import { toast } from "sonner";
 import { VoteType } from "@prisma/client";
@@ -26,15 +28,27 @@ const JobsService = () => {
     });
   };
 
-  const useFetchSingleJob = (id: string | number | null) => {
+  const useFetchSingleJob = (jobId: string | number | null) => {
     async function fetchJob(): Promise<GetJobApiResponse> {
-      return axios.get(`${API_URL}/${id}`).then((res) => res.data);
+      return axios.get(`${API_URL}/${jobId}`).then((res) => res.data);
     }
 
     return useQuery({
       queryFn: fetchJob,
-      queryKey: ["job", id],
-      enabled: !!id,
+      queryKey: ["job", jobId],
+      enabled: !!jobId,
+    });
+  };
+
+  const useFetchAllJobComments = (jobId: string | number | null) => {
+    async function fetchComments(): Promise<CommentApiResponse> {
+      return axios.get(`${API_URL}/${jobId}/comments`).then((res) => res.data);
+    }
+
+    return useQuery({
+      queryFn: fetchComments,
+      queryKey: ["jobComments", jobId],
+      enabled: !!jobId,
     });
   };
 
@@ -127,6 +141,7 @@ const JobsService = () => {
   return {
     useFetchAllJobs,
     useFetchSingleJob,
+    useFetchAllJobComments,
     useHandleCreateJob,
     useHandleEditJob,
     useHandleDeleteJob,

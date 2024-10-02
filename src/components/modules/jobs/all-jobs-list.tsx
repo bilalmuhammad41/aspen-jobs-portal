@@ -37,6 +37,7 @@ import JobSheet from "./job-sheet";
 import { LoaderCircle } from "lucide-react";
 import JobsService from "@/services/job.service";
 import { Job } from "@/app/lib/definitions";
+import JobSheetWrapper from "./job-sheet-wrapper";
 
 
 export const columns: ColumnDef<Job>[] = [
@@ -111,7 +112,8 @@ export const columns: ColumnDef<Job>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return <div className="flex items-center w-[100px]">
-        <JobSheet jobId={row.original.id} />
+        <JobSheetWrapper jobId= {row.original.id}/>
+        {/* <JobSheet jobId={row.original.id} /> */}
       </div>
     },
   },

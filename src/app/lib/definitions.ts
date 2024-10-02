@@ -119,11 +119,9 @@ export type ErrorApiResponse = ApiResponse & {
   error: string | Error;
 };
 
-
 export type GetJobStakeholdersApiResponse = {
   data: JobStakeholder[];
 };
-
 
 export type Job = {
   id: number;
@@ -136,20 +134,23 @@ export type Job = {
   owner: {
     id: number;
     name: string;
-    role: 'ADMIN' | 'STAKEHOLDER'; // Based on your Role enum
+    role: "ADMIN" | "STAKEHOLDER"; // Based on your Role enum
   };
   admin: {
     id: number;
     name: string;
-    role: 'ADMIN' | 'STAKEHOLDER';
+    role: "ADMIN" | "STAKEHOLDER";
   };
   comments: Comment[];
   votes: Vote[];
   jobStakeholders: JobStakeholder[];
-  externalStakeholders: ExternalJobStakeholder[]; 
+  externalStakeholders: ExternalJobStakeholder[];
   userVote: VoteType;
 };
-
+export type CommentApiResponse = {
+  message: string;
+  data: Comment[];
+};
 export type Comment = {
   id: number;
   content: string;
@@ -163,7 +164,7 @@ export type Comment = {
 
 export type Vote = {
   id: number;
-  voteType: 'UPVOTE' | 'DOWNVOTE';
+  voteType: "UPVOTE" | "DOWNVOTE";
   user: {
     id: number;
     name: string;
@@ -175,7 +176,7 @@ export type JobStakeholder = {
   user: {
     id: number;
     name: string;
-    email:string
+    email: string;
   };
 };
 
@@ -186,5 +187,5 @@ export type ExternalJobStakeholder = {
     name: string;
     email: string;
   };
-  user: User
+  user: User;
 };

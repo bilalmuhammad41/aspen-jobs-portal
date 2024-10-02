@@ -4,16 +4,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { jobId: string } }
 ) {
   // const { searchParams } = new URL(request.url);
-  const id = params.id;
+  const jobId = params.jobId;
   const session = await getSession();
   const userId = session?.userId;
 
   try {
     const job = await prisma.job.findUnique({
-      where: { id: Number(id) },
+      where: { id: Number(jobId) },
       select: {
         id: true,
         title: true,
@@ -52,8 +52,8 @@ export async function GET(
     const userVote = await prisma.vote.findUnique({
       where: {
         userId_jobId: {
-          userId: userId || 0, // Fallback to avoid undefined in query
-          jobId: Number(id),
+          userId: userId || 0,
+          jobId: Number(jobId),
         },
       },
       select: {
@@ -65,7 +65,7 @@ export async function GET(
       message: "Job fetched successfully",
       data: {
         ...job,
-        userVote: userVote ? userVote.voteType : null, // Include user's vote or null if no vote
+        userVote: userVote ? userVote.voteType : null,
       },
     });
   } catch (error) {
