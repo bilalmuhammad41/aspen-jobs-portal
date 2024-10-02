@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
-export async function GET(req: NextRequest, { params }: { params: {jobId: string} }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { jobId: string } }
+) {
   const jobId = params.jobId;
   const session = await getSession();
   const userId = session?.userId;
@@ -25,18 +28,18 @@ export async function GET(req: NextRequest, { params }: { params: {jobId: string
 
       const comments = await prisma.comment.findMany({
         where: {
-            jobId: Number(jobId),
+          jobId: Number(jobId),
         },
-        include:{
-          user:{
-            select:{
+        include: {
+          user: {
+            select: {
               name: true,
               role: true,
               id: true,
-            }
-          }
+            },
+          },
         },
-        orderBy: {createdAt:'desc'}
+        orderBy: { createdAt: "desc" },
       });
 
       return NextResponse.json({
@@ -48,14 +51,17 @@ export async function GET(req: NextRequest, { params }: { params: {jobId: string
     return NextResponse.json({ error: "Invalid job ID" }, { status: 400 });
   } catch (error) {
     console.error("Error fetching comments:", error);
-    return NextResponse.json({ error: "An error occurred while fetching comments" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while fetching comments" },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: {jobId: string} }) {
-  const body = await req.formData()
+export async function POST(req: NextRequest) {
+  const body = await req.formData();
   const content = body.get("content") as string | null;
-  const jobId = params.jobId;
+  const jobId = body.get("jobId") as string | null;
   const session = await getSession();
   const userId = session?.userId;
 
@@ -67,7 +73,10 @@ export async function POST(req: NextRequest, { params }: { params: {jobId: strin
   }
 
   if (!content || content.trim().length === 0) {
-    return NextResponse.json({ error: "Comment content is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Comment content is required" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -80,22 +89,28 @@ export async function POST(req: NextRequest, { params }: { params: {jobId: strin
       }
 
       const newComment = await prisma.comment.create({
-        data:{
+        data: {
           jobId: Number(jobId),
           userId: userId,
-          content: content.trim()
-        }
-      })
+          content: content.trim(),
+        },
+      });
 
-      return NextResponse.json({
-        message: "Comment added successfully",
-        data: newComment,
-      }, {status: 201});
+      return NextResponse.json(
+        {
+          message: "Comment added successfully",
+          data: newComment,
+        },
+        { status: 201 }
+      );
     }
 
     return NextResponse.json({ error: "Invalid job ID" }, { status: 400 });
   } catch (error) {
     console.error("Error adding comment:", error);
-    return NextResponse.json({ error: "An error occurred while adding the comment" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while adding the comment" },
+      { status: 500 }
+    );
   }
 }
