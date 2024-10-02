@@ -24,7 +24,7 @@ export default async function JobsModule() {
             Aspen Jobs
             {role === "ADMIN" && (
               <div className="flex gap-4">
-                <CreateJobForm users={users} />
+                <CreateJobForm users={users}/>
               </div>
             )}
           </CardTitle>
@@ -32,7 +32,7 @@ export default async function JobsModule() {
           <CardDescription>View and manage all jobs.</CardDescription>
         </CardHeader>
         <CardContent>
-          <AllJobsList />
+          <AllJobsList/>
         </CardContent>
         <CardFooter>
           <div className="text-xs text-muted-foreground">

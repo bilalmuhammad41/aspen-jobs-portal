@@ -6,7 +6,6 @@ import {
   CommentApiResponse,
 } from "@/app/lib/definitions";
 import { toast } from "sonner";
-import { VoteType } from "@prisma/client";
 
 const API_URL = "/api/jobs";
 
@@ -108,35 +107,6 @@ const JobsService = () => {
     });
   };
 
-  const useHandleAddVote = () => {
-    const queryClient = useQueryClient();
-    async function handleVoteJob({
-      jobId,
-      userId,
-      voteType,
-    }: {
-      jobId: number;
-      userId: number;
-      voteType: VoteType;
-    }): Promise<any> {
-      return axios
-        .post(`${API_URL}/${jobId}/vote`, { userId, voteType })
-        .then((res) => res.data);
-    }
-
-    return useMutation({
-      mutationFn: handleVoteJob,
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries({ queryKey: ["jobs"] });
-        queryClient.invalidateQueries({ queryKey: ["job", variables.jobId] });
-        toast.success("Vote recorded successfully");
-      },
-      onError: (error: AxiosError<{ message: string }>) => {
-        toast.error(error.response?.data?.message || "Failed to record vote");
-      },
-      retry: 0,
-    });
-  };
 
   return {
     useFetchAllJobs,
@@ -144,8 +114,7 @@ const JobsService = () => {
     useFetchAllJobComments,
     useHandleCreateJob,
     useHandleEditJob,
-    useHandleDeleteJob,
-    useHandleAddVote,
+    useHandleDeleteJob
   };
 };
 
