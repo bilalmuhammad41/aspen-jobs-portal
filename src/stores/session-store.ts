@@ -1,18 +1,20 @@
 import { createStore } from 'zustand/vanilla'
 
 export type SessionState = {
+  name: string | undefined;
   userId: number | undefined;
   role: string | undefined;
 }
 
 export type SessionActions = {
-  setUser: (userId: number | undefined, role: string | undefined) => void;
+  setUser: (name: string | undefined, userId: number | undefined, role: string | undefined) => void;
   clearUser: () => void;
 }
 
 export type SessionStore = SessionState & SessionActions
 
 export const defaultInitState: SessionState = {
+  name: undefined,
   userId: undefined,
   role: undefined,
 }
@@ -22,7 +24,7 @@ export const createSessionStore = (
 ) => {
   return createStore<SessionStore>()((set) => ({
     ...initState,
-    setUser: (userId: number | undefined, role: string | undefined) => set(() => ({ userId, role})),
-    clearUser: () => set(() => ({ userId: undefined, role: undefined, session: undefined })),
+    setUser: (name: string | undefined, userId: number | undefined, role: string | undefined) => set(() => ({name, userId, role})),
+    clearUser: () => set(() => ({name: undefined, userId: undefined, role: undefined})),
   }));
 }

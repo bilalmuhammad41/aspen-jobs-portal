@@ -45,12 +45,14 @@ export async function createSessionAction(userId: number) {
     where: { id: newSession.userId },
   });
   const session = await encrypt({
+    name: user?.name as string,
     userId: user?.id as number,
     role: user?.role as string,
     sessionId,
     expiresAt,
   });
 
+  
   cookies().set("session", session, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -63,11 +65,11 @@ export async function createSessionAction(userId: number) {
 export async function updateSessionAction() {
   const session = cookies().get("session")?.value;
   const payload = await decrypt(session);
-
+  
   if (!session || !payload) {
     return null;
   }
-
+  
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   cookies().set("session", session, {
     httpOnly: true,

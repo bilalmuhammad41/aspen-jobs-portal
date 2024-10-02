@@ -10,7 +10,7 @@ const SessionInitializer = () => {
   useEffect(() => {
     const initializeSession = async () => {
       const session = await getSession();
-      setUser(session?.userId, session?.role);
+      setUser(session?.name, session?.userId, session?.role);
     };
     initializeSession();
   }, [setUser]);

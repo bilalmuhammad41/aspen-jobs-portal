@@ -37,6 +37,7 @@ export type FormState =
   | undefined;
 
 export type SessionPayload = {
+  name: string;
   userId: number;
   role: string;
   sessionId: number;
