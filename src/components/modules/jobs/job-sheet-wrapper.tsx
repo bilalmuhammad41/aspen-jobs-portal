@@ -29,10 +29,10 @@ export default function JobSheetWrapper({ jobId }: { jobId: number }) {
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent
-          className="sm:max-w-[500px] gap-4 flex flex-col"
+          className="sm:max-w-[500px] gap-4 flex flex-col  pr-10"
           onClick={(e) => e.stopPropagation()}
         >
-          <JobSheet job={jobData?.data} />
+          <JobSheet job={jobData?.data} setSheetOpen = {setIsOpen}/>
         </SheetContent>
       </Sheet>
     </>

@@ -25,18 +25,23 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import JobsService from "@/services/job.service";
+import { GetAllUsersApiResponse} from "@/app/lib/definitions";
 
-export default function CreateJobForm({ users }) {
+export default function CreateJobForm({
+  users,
+}: {
+  users: GetAllUsersApiResponse;
+}) {
   const { useHandleCreateJob } = JobsService();
   const {
     mutate: handleCreateJob,
     isPending,
     isSuccess,
   } = useHandleCreateJob();
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
+    const formData = new FormData(event.target as HTMLFormElement);
 
     handleCreateJob(formData);
   };
@@ -97,11 +102,7 @@ export default function CreateJobForm({ users }) {
                 <SelectGroup>
                   <SelectLabel>Available people</SelectLabel>
                   {users?.data?.map((user) => (
-                    <SelectItem
-                      key={user.id}
-                      value={String(user.id)}
-                      onClick={(e) => setSelectedOwnerId(e.value)}
-                    >
+                    <SelectItem key={user.id} value={String(user.id)}>
                       {user.name}
                     </SelectItem>
                   ))}
