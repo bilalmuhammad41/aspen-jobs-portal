@@ -1,8 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import {
-  CommentApiResponse,
-} from "@/app/lib/definitions";
 import { toast } from "sonner";
 
 const API_URL = "/api/comments";

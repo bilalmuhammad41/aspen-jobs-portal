@@ -21,7 +21,7 @@ export default function CommentsList({ jobId }: CommentsListProps) {
   const [newComment, setNewComment] = useState<string>("");
   const [isFormVisible, setIsFormVisible] = useState(false);
   const { data: comments, isLoading } = useFetchAllJobComments(jobId);
-  const{ mutate: handleDeleteComment, isPending} = useHandleDeleteComment(jobId)
+  const{ mutate: handleDeleteComment} = useHandleDeleteComment(jobId)
   
 
   const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
