@@ -34,7 +34,6 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionStoreProvider>
-          <SessionInitializer/>
           <TanstackProvider>
             {children}
             <Toaster />

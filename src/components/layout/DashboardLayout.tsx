@@ -9,6 +9,7 @@ import { getSession } from "@/app/lib/session";
 import SideMenu from "../widgets/sidemenu";
 import TopNav from "../widgets/top-nav";
 import DashboardNav from "../widgets/nav-link";
+import SessionInitializer from "../session-intializer";
 
 export const description =
   "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action.";
@@ -42,6 +43,7 @@ export default async function DashboardLayout({ children }: {children:React.Reac
           </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          <SessionInitializer/>
           {children}
         </main>
       </div>

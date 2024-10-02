@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useSessionStore } from "@/provider/session-store-provider";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { MoreVertical, Trash } from "lucide-react";
@@ -12,7 +13,8 @@ import { useState } from "react";
 export default function CommentItem({comment, deleteComment}: {comment:Comment, deleteComment: UseMutateFunction<any, AxiosError<{
   message: string;
 }, any>, string | number, unknown>}) {
-
+  const userId = useSessionStore(state => state.userId)
+  const role = useSessionStore(state => state.role)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const handleDelete = () => {
     deleteComment(comment.id)
@@ -44,7 +46,7 @@ export default function CommentItem({comment, deleteComment}: {comment:Comment, 
               minute: "2-digit",
             })}
           </span>
-          <DropdownMenu>
+         {((comment.user.id == userId) || (role === 'ADMIN')) && <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4" />
@@ -56,7 +58,7 @@ export default function CommentItem({comment, deleteComment}: {comment:Comment, 
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu>}
         </div>
       </div>
       <p className="text-sm">{comment.content}</p>
