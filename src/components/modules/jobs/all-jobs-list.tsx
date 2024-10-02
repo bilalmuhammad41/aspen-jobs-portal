@@ -33,7 +33,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import JobSheet from "./job-sheet";
 import { LoaderCircle } from "lucide-react";
 import JobsService from "@/services/job.service";
 import { Job } from "@/app/lib/definitions";
@@ -113,7 +112,6 @@ export const columns: ColumnDef<Job>[] = [
     cell: ({ row }) => {
       return <div className="flex items-center w-[100px]">
         <JobSheetWrapper jobId= {row.original.id}/>
-        {/* <JobSheet jobId={row.original.id} /> */}
       </div>
     },
   },

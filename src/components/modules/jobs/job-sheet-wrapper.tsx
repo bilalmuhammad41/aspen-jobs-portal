@@ -32,7 +32,7 @@ export default function JobSheetWrapper({ jobId }: { jobId: number }) {
           className="sm:max-w-[500px] gap-4 flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          <JobSheet job={jobData?.data!} />
+          <JobSheet job={jobData?.data} />
         </SheetContent>
       </Sheet>
     </>

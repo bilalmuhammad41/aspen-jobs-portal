@@ -5,14 +5,18 @@ import StakeholdersList from "./stakeholder-list";
 import VoteButtons from "./vote-buttons";
 import { Job } from "@/app/lib/definitions";
 
-export default function JobSheet({ job }: { job: Job }) {
+export default function JobSheet({ job }: { job: Job | undefined }) {
+  if (!job) {
+    return <div>Loading job details...</div>;
+  }
+
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">{job?.title}</CardTitle>
+          <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
           <CardDescription className="text-base">
-            {job?.description}
+            {job.description}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -22,7 +26,7 @@ export default function JobSheet({ job }: { job: Job }) {
                 Owner
               </Label>
               <div className="text-lg font-semibold">
-                {job?.owner.name}
+                {job.owner.name}
               </div>
             </div>
             <VoteButtons job={job} />
@@ -30,7 +34,7 @@ export default function JobSheet({ job }: { job: Job }) {
         </CardContent>
       </Card>
       <StakeholdersList job={job} />
-      <CommentsList jobId={job?.id} />
+      <CommentsList jobId={job.id} />
     </>
   );
 }

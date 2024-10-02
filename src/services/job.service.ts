@@ -3,7 +3,6 @@ import axios, { AxiosError } from "axios";
 import {
   GetAllJobsApiResponse,
   GetJobApiResponse,
-  Comment,
   CommentApiResponse,
 } from "@/app/lib/definitions";
 import { toast } from "sonner";
@@ -72,6 +71,27 @@ const JobsService = () => {
     });
   };
 
+  const useHandleAddComment = (jobId: string | number | null) => {
+    const queryClient = useQueryClient();
+    async function handleAddComment(data: FormData): Promise<any> {
+      const response = await axios.post(`${API_URL}/${jobId}/comments`, data).then((res) => res.data);
+      return response.data.data;
+    }
+    const onSuccess = ()=>{
+      queryClient.invalidateQueries({ queryKey: ["jobComments", jobId] });
+        toast.success("Comment added successfully");
+    }
+    return useMutation({
+      mutationFn: handleAddComment,
+      onSuccess,
+      onError: (error: AxiosError<{ error: string }>) => {
+        toast.error(
+          error.response?.data?.error || "Failed to add comment"
+        );
+      },
+      retry: 0,
+    });
+  };
   const useHandleEditJob = (jobId: string | number | null) => {
     const queryClient = useQueryClient();
     async function handleEditJob(data: FormData): Promise<any> {
@@ -142,6 +162,7 @@ const JobsService = () => {
     useFetchAllJobs,
     useFetchSingleJob,
     useFetchAllJobComments,
+    useHandleAddComment,
     useHandleCreateJob,
     useHandleEditJob,
     useHandleDeleteJob,
