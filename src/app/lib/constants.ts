@@ -1,8 +1,8 @@
 export const jobStatus = [
   "PENDING",
-  "IN PROGRESS",
+  "IN_PROGRESS",
   "COMPLETED",
   "CANCELLED",
   "FAILED",
-  "ON HOLD",
+  "ON_HOLD",
 ];
