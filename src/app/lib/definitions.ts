@@ -47,10 +47,12 @@ export type SessionPayload = {
 export const CreateJobFormSchema = z.object({
   title: z.string().min(1, { message: "Title is required." }).trim(),
   description: z
-    .string()
-    .min(1, { message: "Description is required." })
-    .trim(),
+  .string()
+  .min(1, { message: "Description is required." })
+  .trim(),
   ownerId: z.string().min(1, { message: "Owner Id is required." }).trim(),
+  status: z.string().min(1, { message: "Status is required." }).trim(),
+  progress: z.string().min(1, { message: "Progress is required." }).trim(),
 });
 
 export interface ApiResponse {
@@ -146,6 +148,8 @@ export type Job = {
   jobStakeholders: JobStakeholder[];
   externalStakeholders: ExternalJobStakeholder[];
   userVote: VoteType;
+  status: string;
+  progress: number;
 };
 export type CommentApiResponse = {
   message: string;

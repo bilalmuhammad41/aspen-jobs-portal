@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 import { CreateJobFormSchema } from "@/app/lib/definitions";
+import { JobStatus } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -40,6 +41,8 @@ export async function GET(request: NextRequest) {
           externalStakeholders: true,
           upvotes: true,
           downvotes: true,
+          status: true,
+          progress: true
         },
       });
 
@@ -97,6 +100,8 @@ export async function GET(request: NextRequest) {
           externalStakeholders: true,
           upvotes: true,
           downvotes: true,
+          status: true,
+          progress: true
         },
         orderBy: { createdAt: "desc" },
       });
@@ -156,6 +161,8 @@ export async function POST(request: NextRequest) {
       title: formData.get("title"),
       description: formData.get("title"),
       ownerId: formData.get("ownerId"),
+      status: formData.get("status"),
+      progress: formData.get("progress"),
     });
     console.log(validatedFields.data);
     if (!validatedFields.success) {
@@ -165,7 +172,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { title, description, ownerId } = validatedFields.data;
+    const { title, description, ownerId, status, progress } = validatedFields.data;
 
     const job = await prisma.job.create({
       data: {
@@ -173,6 +180,8 @@ export async function POST(request: NextRequest) {
         description,
         ownerId: Number(ownerId),
         adminId: session.userId,
+        progress: Number(progress),
+        status: status as JobStatus,
       },
       select: {
         id: true,

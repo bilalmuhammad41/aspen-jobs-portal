@@ -1,12 +1,12 @@
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
+import { JobStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { jobId: string } }
 ) {
-  // const { searchParams } = new URL(request.url);
   const jobId = params.jobId;
   const session = await getSession();
   const userId = session?.userId;
@@ -41,6 +41,8 @@ export async function GET(
         externalStakeholders: true,
         upvotes: true,
         downvotes: true,
+        status: true,
+        progress: true,
       },
     });
 
@@ -84,6 +86,8 @@ export async function PUT(
     title: formData.get("title") as string,
     description: formData.get("description") as string,
     ownerId: Number(formData.get("ownerId")) as number,
+    status: formData.get("status") as JobStatus,
+    progress: Number(formData.get("progress")),
   };
   const { jobId } = params;
   if (!session || session.role !== "ADMIN") {
@@ -91,7 +95,6 @@ export async function PUT(
   }
 
   try {
-
     if (!jobId) {
       return NextResponse.json(
         { error: "Job ID is required" },
@@ -107,6 +110,7 @@ export async function PUT(
         title: true,
         description: true,
         ownerId: true,
+
         owner: {
           select: {
             id: true,
@@ -114,6 +118,8 @@ export async function PUT(
             role: true,
           },
         },
+        status: true,
+        progress: true,
       },
     });
 

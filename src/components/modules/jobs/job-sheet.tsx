@@ -16,6 +16,9 @@ import { Dispatch, SetStateAction } from "react";
 import { useSessionStore } from "@/provider/session-store-provider";
 import UsersService from "@/services/user.service";
 import EditJobForm from "./edit-job-form";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { JobStatus } from "@prisma/client";
 
 export default function JobSheet({
   job,
@@ -34,34 +37,65 @@ export default function JobSheet({
     return <div>Loading job details...</div>;
   }
 
-
-  return (
-    <>
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case JobStatus.COMPLETED:
+        return 'bg-green-500'
+      case JobStatus.IN_PROGRESS:
+        return 'bg-blue-500'
+      case JobStatus.PENDING:
+        return 'bg-yellow-500'
+      case JobStatus.FAILED:
+        return 'bg-red-500'
+      case JobStatus.CANCELLED:
+        return 'bg-slate-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
+  
+    return (
+      <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
-          <CardDescription className="text-base">
-            {job.description}
-          </CardDescription>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
+              <CardDescription className="text-base mt-1">
+                {job.description}
+              </CardDescription>
+            </div>
+            <Badge className={`${getStatusColor(job.status)} text-white`}>
+              {job?.status}
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <Label className="text-sm font-medium text-gray-500">Owner</Label>
-              <div className="text-lg font-semibold">{job.owner.name}</div>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm font-medium text-gray-500">Owner</Label>
+                <div className="text-lg font-semibold">{job.owner.name}</div>
+              </div>
+              <VoteButtons job={job} />
             </div>
-            <VoteButtons job={job} />
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Label className="text-sm font-medium text-gray-500">Progress</Label>
+                <span className="text-sm font-medium">{job.progress}%</span>
+              </div>
+              <Progress value={job.progress} indicatorColor="bg-green-500" className="w-full " />
+            </div>
           </div>
-          <CardFooter className="p-0">
-            {role === "ADMIN" && (
-              <EditJobForm job={job} users={users} />
-            )}
-            {role === "ADMIN" && (
-              <DeleteButton jobId={job.id} setSheetOpen={setSheetOpen} />
-            )}
-
-          </CardFooter>
         </CardContent>
+        <CardFooter className="p-5">
+          {role === "ADMIN" && (
+            <EditJobForm job={job} users={users} />
+          )}
+          {role === "ADMIN" && (
+            <DeleteButton jobId={job.id} setSheetOpen={setSheetOpen} />
+          )}
+        </CardFooter>
       </Card>
       <StakeholdersList job={job} />
       <CommentsList jobId={job.id} />

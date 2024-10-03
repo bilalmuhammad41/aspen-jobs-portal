@@ -26,6 +26,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import JobsService from "@/services/job.service";
 import { GetAllUsersApiResponse, Job } from "@/app/lib/definitions";
+import { Slider } from "@/components/ui/slider";
+import { jobStatus } from "@/app/lib/constants";
 
 export default function EditJobForm({
   job,
@@ -41,6 +43,7 @@ export default function EditJobForm({
     isSuccess,
   } = useHandleEditJob(job.id);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [sliderValue, setSliderValue] = useState((job?.progress));
   const [formElement, setFormElement] = useState<HTMLFormElement | null>(null);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,11 +55,12 @@ export default function EditJobForm({
   };
 
   const handleConfirmSubmit = async () => {
-    if (!formElement) return; // Ensure formElement is set
+    if (!formElement) return;
 
     try {
-      const formData = new FormData(formElement); // Create FormData from the saved form element
-      await handleEditJob(formData); // Ensure the job is awaited
+      const formData = new FormData(formElement); 
+      formData.append("progress", String(sliderValue))
+      await handleEditJob(formData);
       setIsConfirmDialogOpen(false);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -140,6 +144,53 @@ export default function EditJobForm({
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex flex-col gap-2">
+            <Label htmlFor="status" className="">
+              Status
+            </Label>
+            <Select defaultValue={job.status} name="status">
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Job Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Job Status</SelectLabel>
+                  {jobStatus.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="status" className="">
+              Progress
+            </Label>
+            <div className=" flex gap-5 w-full">
+              <Slider
+              className="max-w-[200px]"
+                value={[sliderValue]}
+                onValueChange={(e)=> setSliderValue(e[0])}
+                max={100}
+                step={1}
+              />
+              <Input
+              className="max-w-[100px]"
+                type="text"
+                value={sliderValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{1,3}$/.test(value) && Number(value) <= 100) {
+                    setSliderValue(Number(value));
+                  } else if (value === "") {
+                    setSliderValue(0);
+                  }
+                }}
+              />
+            </div>
+          </div>
 
             <DialogFooter>
               <Button disabled={isPending} type="submit">

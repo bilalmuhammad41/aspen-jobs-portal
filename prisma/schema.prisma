@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  // directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
@@ -49,6 +49,8 @@ model Job {
   externalStakeholders ExternalJobStakeholder[]
   upvotes              Int                      @default(0)
   downvotes            Int                      @default(0)
+  status               JobStatus                @default(PENDING) 
+  progress             Float                    @default(0)       
 }
 
 model Comment {
@@ -109,4 +111,13 @@ enum Role {
 enum VoteType {
   UPVOTE
   DOWNVOTE
+}
+
+enum JobStatus {
+  PENDING       
+  IN_PROGRESS  
+  COMPLETED    
+  CANCELLED     
+  ON_HOLD       
+  FAILED        
 }

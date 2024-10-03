@@ -25,13 +25,16 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import JobsService from "@/services/job.service";
-import { GetAllUsersApiResponse} from "@/app/lib/definitions";
+import { GetAllUsersApiResponse } from "@/app/lib/definitions";
+import { jobStatus } from "@/app/lib/constants";
+import { Slider } from "@/components/ui/slider";
 
 export default function CreateJobForm({
   users,
 }: {
   users: GetAllUsersApiResponse;
 }) {
+  const [sliderValue, setSliderValue] = useState(0);
   const { useHandleCreateJob } = JobsService();
   const {
     mutate: handleCreateJob,
@@ -42,6 +45,7 @@ export default function CreateJobForm({
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
+    formData.append("progress", String(sliderValue))
 
     handleCreateJob(formData);
   };
@@ -109,6 +113,53 @@ export default function CreateJobForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="status" className="">
+              Status
+            </Label>
+            <Select name="status">
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Job Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Job Status</SelectLabel>
+                  {jobStatus.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="status" className="">
+              Progress
+            </Label>
+            <div className=" flex gap-5 w-full">
+              <Slider
+              className="max-w-[200px]"
+                value={[sliderValue]}
+                onValueChange={(e)=> setSliderValue(e[0])}
+                max={100}
+                step={1}
+              />
+              <Input
+              className="max-w-[100px]"
+                type="text"
+                value={sliderValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{1,3}$/.test(value) && Number(value) <= 100) {
+                    setSliderValue(Number(value));
+                  } else if (value === "") {
+                    setSliderValue(0);
+                  }
+                }}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button disabled={isPending} type="submit">
