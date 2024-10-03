@@ -102,7 +102,7 @@ export default function EditJobForm({
                 id="title"
                 name="title"
                 placeholder="Title"
-                defaultValue={job.title} // Prepopulate with job data
+                defaultValue={job.title}
                 className="col-span-3"
               />
             </div>
@@ -116,7 +116,7 @@ export default function EditJobForm({
                 id="description"
                 name="description"
                 placeholder="Job description"
-                defaultValue={job.description} // Prepopulate with job data
+                defaultValue={job.description}
                 className="w-full"
               />
             </div>
