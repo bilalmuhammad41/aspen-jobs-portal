@@ -66,7 +66,7 @@ export default function JobSheet({
               </CardDescription>
             </div>
             <Badge className={`${getStatusColor(job.status)} text-white`}>
-              {job?.status}
+              {job?.status?.split("_").join(" ")}
             </Badge>
           </div>
         </CardHeader>

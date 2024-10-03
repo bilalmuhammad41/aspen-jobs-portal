@@ -60,6 +60,8 @@ export default function EditJobForm({
     try {
       const formData = new FormData(formElement); 
       formData.append("progress", String(sliderValue))
+      const selectedJobStatus = String( await formData.get("status"))?.split(" ").join("_")
+      formData.set('status', selectedJobStatus)
       await handleEditJob(formData);
       setIsConfirmDialogOpen(false);
     } catch (error) {
@@ -148,7 +150,7 @@ export default function EditJobForm({
             <Label htmlFor="status" className="">
               Status
             </Label>
-            <Select defaultValue={job.status} name="status">
+            <Select defaultValue={String(job.status.split("_").join(" "))} name="status">
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Job Status" />
               </SelectTrigger>

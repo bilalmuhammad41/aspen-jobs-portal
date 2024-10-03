@@ -45,6 +45,8 @@ export default function CreateJobForm({
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
+    const selectedJobStatus = String( await formData.get("status"))?.split(" ").join("_")
+    formData.set('status', selectedJobStatus)
     formData.append("progress", String(sliderValue))
 
     handleCreateJob(formData);
