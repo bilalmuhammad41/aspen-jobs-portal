@@ -44,7 +44,7 @@ export default function JobSheet({
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
+              <CardTitle className="text-2xl font-bold pr-2">{job.title}</CardTitle>
               <CardDescription className="text-base mt-1">
                 {job.description}
               </CardDescription>

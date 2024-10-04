@@ -74,7 +74,7 @@ export default function CommentsList({ jobId }: CommentsListProps) {
             </Button>
           </form>
         </div>
-        <ScrollArea className=" pr-4">
+        <ScrollArea className="xl:h-[300px] h-[200px] pr-4">
           {isLoading ? (
             <div className="w-full flex justify-center items-center">
               <LoaderCircle className="animate-spin" />
