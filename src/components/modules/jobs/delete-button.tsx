@@ -17,7 +17,7 @@ export default function DeleteButton({jobId, setSheetOpen}:{jobId:number, setShe
   return(
     <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
     <DialogTrigger asChild>
-      <Button className="flex gap-2" variant="destructive">
+      <Button className="flex gap-2 bg-white text-red-500 hover:bg-red-500 hover:text-white">
         <Trash size={15}/>
       </Button>
     </DialogTrigger>

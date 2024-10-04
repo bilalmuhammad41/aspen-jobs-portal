@@ -83,20 +83,21 @@ const StakeholderService = () => {
     });
   };
 
-  const useHandleDeleteJob = () => {
+  const useHandleRemoveStakeholder = (jobId: string | number, ) => {
     const queryClient = useQueryClient();
-    async function handleDeleteJob(id: string | number): Promise<any> {
-      return axios.delete(`${API_URL}/${id}`).then((res) => res.data);
+    async function handleRemoveStakeholder(userId: string | number): Promise<any> {
+      return axios.delete(`${API_URL}?jobId=${jobId}&userId=${userId}`).then((res) => res.data);
     }
-
+    const onSuccess = () =>{
+      
+      queryClient.invalidateQueries({ queryKey: ["job", jobId] });
+      toast.success("Stakeholder Removal was Successful");
+    }
     return useMutation({
-      mutationFn: handleDeleteJob,
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["jobs"] });
-        toast.success("Job Deleted Successfully");
-      },
+      mutationFn: handleRemoveStakeholder,
+      onSuccess,
       onError: (error: AxiosError<{ message: string }>) => {
-        toast.error(error.response?.data?.message || "Failed to delete job");
+        toast.error(error.response?.data?.message || "Failed to removel stakeholder");
       },
       retry: 0,
     });
@@ -107,7 +108,7 @@ const StakeholderService = () => {
     useHandleBecomeStakeholder,
     useFetchSingleJob,
     useHandleAddStakeholderToJob,
-    useHandleDeleteJob,
+    useHandleRemoveStakeholder,
   };
 };
 

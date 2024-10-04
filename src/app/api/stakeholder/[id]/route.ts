@@ -1,6 +1,6 @@
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   { params }: { params: { id: string } }
