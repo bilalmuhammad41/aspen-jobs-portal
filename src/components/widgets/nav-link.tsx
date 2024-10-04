@@ -13,7 +13,7 @@ type NavLinkProps = {
 
 const NavLink = ({ href, children, icon: Icon }: NavLinkProps) => {
   const pathname = usePathname()
-  const isActive = pathname === href
+  const isActive = pathname.startsWith(href)
 
   return (
     <Link
@@ -40,20 +40,28 @@ export default function DashboardNav({ role }: DashboardNavProps) {
     <div className="flex-1">
       <nav className="grid items-start gap-2 px-2 text-sm font-medium lg:px-4">
         {role === "ADMIN" && (
-          <NavLink href="/dashboard/admin/home" icon={Home}>
-            Dashboard
-          </NavLink>
-        )}
-        <NavLink href="/dashboard/admin/jobs" icon={ShoppingCart}>
-          Jobs
-        </NavLink>
-        {role === "ADMIN" && (
           <>
+            <NavLink href="/dashboard/admin/home" icon={Home}>
+              Dashboard
+            </NavLink>
+            <NavLink href="/dashboard/admin/jobs" icon={ShoppingCart}>
+              Jobs
+            </NavLink>
             <NavLink href="/dashboard/admin/stakeholders" icon={Users}>
               Stakeholders
             </NavLink>
             <NavLink href="/dashboard/admin/analytics" icon={LineChart}>
               Analytics
+            </NavLink>
+          </>
+        )}
+        {role === "STAKEHOLDER" && (
+          <>
+            {/* <NavLink href="/dashboard/user/home" icon={Home}>
+              Dashboard
+            </NavLink> */}
+            <NavLink href="/dashboard/user/jobs" icon={ShoppingCart}>
+              Jobs
             </NavLink>
           </>
         )}

@@ -6,12 +6,12 @@ import { Job } from "@/app/lib/definitions";
 import { VoteType } from "@prisma/client";
 import VoteService from "@/services/vote.service";
 
-export default function VoteButtons({ job }: { job: Job }) {
+export default function VoteButtons({ job }: { job: Job | undefined}) {
   const { useHandleAddVote } = VoteService();
-  const { mutate: handleUpdateVote } = useHandleAddVote(job?.id);
+  const { mutate: handleUpdateVote } = useHandleAddVote(job?.id as number);
 
   const handleVote = (voteType: VoteType) => {
-    handleUpdateVote({ jobId: job?.id, voteType });
+    handleUpdateVote({ jobId: job?.id as number, voteType });
   };
 
   return (

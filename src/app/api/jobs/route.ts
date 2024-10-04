@@ -6,142 +6,111 @@ import { JobStatus } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10; 
+  const searchQuery = searchParams.get("search") || "";
+  const offset = (page - 1) * limit;
   const session = await getSession();
   const userId = session?.userId;
 
   try {
-    if (id) {
-      const job = await prisma.job.findUnique({
-        where: { id: Number(id) },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          ownerId: true,
-          owner: {
-            select: {
-              id: true,
-              name: true,
-              role: true,
+   
+    const allJobs = await prisma.job.findMany({
+      skip: offset,
+      take: limit,
+      where: {
+        OR: [
+          {
+            title: {
+              contains: searchQuery, 
+              mode: "insensitive",
             },
           },
-          comments: true,
-          jobStakeholders: {
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
+          {
+            description: {
+              contains: searchQuery,
+              mode: "insensitive", 
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        ownerId: true,
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            role: true,
+          },
+        },
+        comments: true,
+        jobStakeholders: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
               },
             },
           },
-          externalStakeholders: true,
-          upvotes: true,
-          downvotes: true,
-          status: true,
-          progress: true
         },
-      });
+        externalStakeholders: true,
+        upvotes: true,
+        downvotes: true,
+        status: true,
+        progress: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
 
-      if (!job) {
-        return NextResponse.json({ error: "Job not found" }, { status: 404 });
-      }
+    const totalJobs = await prisma.job.count();
 
-      // Fetch the user's vote for this job, if it exists
-      const userVote = await prisma.vote.findUnique({
+    let jobsWithUserVotes = allJobs;
+
+    if (userId) {
+    
+      const userVotes = await prisma.vote.findMany({
         where: {
-          userId_jobId: {
-            userId: userId || 0, // Fallback to avoid undefined in query
-            jobId: Number(id),
-          },
+          userId,
+          jobId: { in: allJobs.map((job) => job.id) },
         },
         select: {
+          jobId: true,
           voteType: true,
         },
       });
 
-      return NextResponse.json({
-        message: "Job fetched successfully",
-        data: {
-          ...job,
-          userVote: userVote ? userVote.voteType : null, // Include user's vote or null if no vote
-        },
-      });
-    } else {
-      // Fetch all jobs and include user's vote for each job
-      const allJobs = await prisma.job.findMany({
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          ownerId: true,
-          owner: {
-            select: {
-              id: true,
-              name: true,
-              role: true,
-            },
-          },
-          comments: true,
-          jobStakeholders: {
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
-          },
-          externalStakeholders: true,
-          upvotes: true,
-          downvotes: true,
-          status: true,
-          progress: true
-        },
-        orderBy: { createdAt: "desc" },
-      });
+      
+      const votesMap = userVotes.reduce((acc, vote) => {
+        acc[vote.jobId] = vote.voteType;
+        return acc;
+      }, {} as Record<number, string>);
 
-      // Optionally include vote information for each job (if user is logged in)
-      let jobsWithUserVotes = allJobs;
-
-      if (userId) {
-        // Fetch votes of the logged-in user for all jobs
-        const userVotes = await prisma.vote.findMany({
-          where: {
-            userId,
-            jobId: { in: allJobs.map((job) => job.id) },
-          },
-          select: {
-            jobId: true,
-            voteType: true,
-          },
-        });
-        const votesMap = userVotes.reduce((acc, vote) => {
-          acc[vote.jobId] = vote.voteType;
-          return acc;
-        }, {} as Record<number, string>);
-
-        // Add user's vote to each job object
-        jobsWithUserVotes = allJobs.map((job) => ({
-          ...job,
-          userVote: votesMap[job.id] || null,
-        }));
-      }
-
-      return NextResponse.json({
-        message: "Jobs fetched successfully",
-        data: jobsWithUserVotes,
-      });
+    
+      jobsWithUserVotes = allJobs.map((job) => ({
+        ...job,
+        userVote: votesMap[job.id] || null,
+      }));
     }
+
+    return NextResponse.json({
+      message: "Jobs fetched successfully",
+      data: jobsWithUserVotes,
+      pagination: {
+        total: totalJobs,
+        page: page,
+        limit: limit,
+        totalPages: Math.ceil(totalJobs / limit),
+      },
+    });
   } catch (error) {
-    console.error("Error fetching job(s):", error);
+    console.error("Error fetching jobs:", error);
     return NextResponse.json(
-      { error: "Error fetching job(s)" },
+      { error: "Error fetching jobs" },
       { status: 500 }
     );
   }

@@ -10,22 +10,24 @@ import { toast } from "sonner";
 const API_URL = "/api/jobs";
 
 const JobsService = () => {
-  const useFetchAllJobs = (
-    page?: number,
-    limit?: number,
-    searchQuery?: string
-  ) => {
+  const useFetchAllJobs = (page?: number, limit?: number, searchQuery?: string) => {
     async function fetchAllJobs(): Promise<GetAllJobsApiResponse> {
-      const response = await axios.get(API_URL);
+      const params: Record<string, any> = {};
+  
+      if (page !== undefined) params.page = page;
+      if (limit !== undefined) params.limit = limit;
+      if (searchQuery) params.search = searchQuery;
+  
+      const response = await axios.get(API_URL, { params });
+      
       return response.data;
     }
-
+  
     return useQuery({
       queryFn: fetchAllJobs,
       queryKey: ["jobs", page, limit, searchQuery],
     });
   };
-
   const useFetchSingleJob = (jobId: string | number | null) => {
     async function fetchJob(): Promise<GetJobApiResponse> {
       return axios.get(`${API_URL}/${jobId}`).then((res) => res.data);

@@ -35,8 +35,8 @@ export default function CommentsList({ jobId }: CommentsListProps) {
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader className="flex flex-row pt-3 items-center justify-between">
+    <Card className="w-full mx-auto shadow-none border-none">
+      <CardHeader className="flex flex-row pt-3 px-0 items-center justify-between">
         <CardTitle className="text-lg font-semibold">All Comments</CardTitle>
         <Button
           variant="outline"
@@ -67,7 +67,7 @@ export default function CommentsList({ jobId }: CommentsListProps) {
               placeholder="Add your comment here..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[100px]"
+              className="min-h-[70px]"
             />
             <Button type="submit" className="w-full" disabled={isAddComment}>
               {isAddComment ? 'Submitting...' : 'Submit Comment'}

@@ -95,6 +95,12 @@ export interface GetJobApiResponse extends ApiResponse {
 // API response for multiple jobs
 export interface GetAllJobsApiResponse extends ApiResponse {
   data: Job[];
+  pagination: {
+    total: number;     
+    page: number;       
+    limit: number;      
+    totalPages: number; 
+  };
 }
 
 export interface CreateJobApiResponse extends ApiResponse {
@@ -136,7 +142,7 @@ export type Job = {
   owner: {
     id: number;
     name: string;
-    role: "ADMIN" | "STAKEHOLDER"; // Based on your Role enum
+    role: "ADMIN" | "STAKEHOLDER";
   };
   admin: {
     id: number;

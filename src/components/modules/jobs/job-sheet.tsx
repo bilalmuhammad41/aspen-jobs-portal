@@ -18,7 +18,7 @@ import UsersService from "@/services/user.service";
 import EditJobForm from "./edit-job-form";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { JobStatus } from "@prisma/client";
+import { getStatusColor } from "@/app/lib/constants";
 
 export default function JobSheet({
   job,
@@ -37,22 +37,6 @@ export default function JobSheet({
     return <div>Loading job details...</div>;
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case JobStatus.COMPLETED:
-        return 'bg-green-500'
-      case JobStatus.IN_PROGRESS:
-        return 'bg-blue-500'
-      case JobStatus.PENDING:
-        return 'bg-yellow-500'
-      case JobStatus.FAILED:
-        return 'bg-red-500'
-      case JobStatus.CANCELLED:
-        return 'bg-slate-500'
-      default:
-        return 'bg-gray-500'
-    }
-  }
   
     return (
       <>
@@ -65,7 +49,7 @@ export default function JobSheet({
                 {job.description}
               </CardDescription>
             </div>
-            <Badge className={`${getStatusColor(job.status)} text-white`}>
+            <Badge className={`${getStatusColor(job.status)} text-white flex-nowrap whitespace-nowrap`}>
               {job?.status?.split("_").join(" ")}
             </Badge>
           </div>

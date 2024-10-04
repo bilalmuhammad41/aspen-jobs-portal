@@ -90,7 +90,7 @@ const StakeholdersList = ({ job }: { job: Job }) => {
       <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
         <DialogTrigger asChild>
           <Button
-            disabled={isUserStakeholder || isPending} // Disable if the user is already a stakeholder or if the request is pending
+            disabled={isUserStakeholder || isPending}
           >
             {isUserStakeholder ? "You are a Stakeholder" : "Become a Stakeholder"}
           </Button>

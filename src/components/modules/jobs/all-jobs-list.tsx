@@ -17,7 +17,6 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -40,28 +39,28 @@ import JobSheetWrapper from "./job-sheet-wrapper";
 
 
 export const columns: ColumnDef<Job>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -75,7 +74,7 @@ export const columns: ColumnDef<Job>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div>{row.getValue("title")}</div>,
+    cell: ({ row }) => <div className="pl-2">{row.getValue("title")}</div>,
   },
   {
     accessorKey: "description",
@@ -90,7 +89,7 @@ export const columns: ColumnDef<Job>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="max-w-[300px]">{row.getValue("description")}</div>,
+    cell: ({ row }) => <div className="max-w-[300px] pl-2">{row.getValue("description")}</div>,
   },
   {
     accessorKey: "owner.name",
@@ -105,6 +104,7 @@ export const columns: ColumnDef<Job>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => <div className="max-w-[300px] pl-2">{row.original.owner.name}</div>,
   },
   {
     id: "actions",
@@ -206,7 +206,7 @@ export default function AllJobsList() {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead className="p-0" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(

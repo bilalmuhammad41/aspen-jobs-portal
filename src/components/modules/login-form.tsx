@@ -22,8 +22,6 @@ interface LoginState {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  
-  console.log("SubmitButton - Pending state:", pending);
 
   return (
     <Button type="submit" disabled={pending} className="relative">

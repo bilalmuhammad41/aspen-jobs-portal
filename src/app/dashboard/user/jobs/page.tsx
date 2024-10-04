@@ -1,10 +1,9 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import JobsModule from "@/components/modules/jobs";
-
+import UserJobsModule from "@/components/modules/dashboard/user/jobs";
 export default async function JobsPage() {
   return (
     <DashboardLayout>
-      <JobsModule />
+      <UserJobsModule/>
     </DashboardLayout>
   );
 }

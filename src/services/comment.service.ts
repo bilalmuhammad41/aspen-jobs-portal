@@ -39,10 +39,10 @@ const CommentService = () => {
       mutationFn: handleDeleteJob,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["jobComments", jobId] });
-        toast.success("Job Deleted Successfully");
+        toast.success("Comment Deleted Successfully");
       },
       onError: (error: AxiosError<{ message: string }>) => {
-        toast.error(error.response?.data?.message || "Failed to delete job");
+        toast.error(error.response?.data?.message || "Failed to delete comment. Please try again later.");
       },
       retry: 0,
     });
