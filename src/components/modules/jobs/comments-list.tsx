@@ -74,13 +74,13 @@ export default function CommentsList({ jobId }: CommentsListProps) {
             </Button>
           </form>
         </div>
-        <ScrollArea className="xl:h-[300px] h-[200px] pr-4">
+        <ScrollArea type="always" className="pr-4">
           {isLoading ? (
             <div className="w-full flex justify-center items-center">
               <LoaderCircle className="animate-spin" />
             </div>
           ) : (
-            <div className="space-y-6 max-[1440px]:max-h-[210px]">
+            <div className="space-y-6 max-h-[450px] ">
               {comments && comments?.data.length > 0 ? (
                 comments?.data?.map((comment: Comment, index: number) => (
                   <CommentItem key={index} comment={comment} deleteComment = {handleDeleteComment}/>
