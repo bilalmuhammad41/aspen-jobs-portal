@@ -52,7 +52,6 @@ export async function POST(request: NextRequest) {
 }
 export async function DELETE(request: NextRequest) {
   const session = await getSession();
-  const userId = session?.userId;
 
   const { searchParams } = new URL(request.url);
   const jobId = searchParams.get("jobId");

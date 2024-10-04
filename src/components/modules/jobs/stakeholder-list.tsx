@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LoaderCircle, Mail, Trash2, User, Users } from "lucide-react";
+import { LoaderCircle, Mail, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import StakeholderService from "@/services/stakeholder.service";
