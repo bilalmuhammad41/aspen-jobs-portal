@@ -37,7 +37,7 @@ export default function JobItem({ jobId }: JobItemProp) {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const { useFetchSingleJob } = JobsService()
-  const { data: jobData } = useFetchSingleJob(jobId)
+  const { data: jobData, isLoading:isFetchJobLoading } = useFetchSingleJob(jobId)
   const { useHandleBecomeStakeholder } = StakeholderService()
   const {
     mutate: handleBecomeStakeholderRequest,
@@ -61,34 +61,37 @@ export default function JobItem({ jobId }: JobItemProp) {
     }
   }, [isSuccess])
 
+  if(isFetchJobLoading){
+    return <div className="w-full flex justify-center p-10"><LoaderCircle className="h-7 w-7 opacity-50 animate-spin"/></div>
+  }
   return (
     <Card className="w-full ">
-      <CardHeader className=" flex flex-row items-center justify-between space-y-0">
-        <div className="space-y-1">
-          <CardTitle className="text-2xl">{jobData?.data?.title}</CardTitle>
+      <CardHeader className=" flex md:flex-row flex-col-reverse md:items-center justify-between space-y-0 max-md:p-3">
+        <div className="space-y-1 max-md:mt-3">
+          <CardTitle className="md:text-2xl text-xl">{jobData?.data?.title}</CardTitle>
         </div>
         <Badge
           className={`${getStatusColor(
             jobData?.data?.status as string
-          )} text-white flex-nowrap whitespace-nowrap h-7`}
+          )} text-white flex-nowrap whitespace-nowrap h-7 rounded-full max-md:h-6 max-md:text-[10px] max-md:w-min`}
         >
           {jobData?.data?.status?.split("_").join(" ")}
         </Badge>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 max-md:p-3">
         <CardDescription className="text-black">
           {jobData?.data?.description}
         </CardDescription>
-        <div className="flex flex-col gap-2 w-full py-5">
-          <div className="flex items-center space-x-4">
-            <User className="h-5 w-5 text-gray-500" />
+        <div className="flex flex-col md:gap-2 gap-1 w-full md:py-5 py-2 max-md:text-[12px]">
+          <div className="flex items-center space-x-1">
+            <User className="md:h-5 md:w-5 h-4 w-4 text-gray-500" />
             <div className="font-semibold">Owner:</div>
             <div>{jobData?.data?.owner?.name}</div>
           </div>
-          <div className="flex items-center space-x-4">
-            <Users className="h-5 w-5 text-gray-500" />
+          <div className="flex md:items-center space-x-1">
+            <Users className="md:h-5 md:w-5 h-4 w-4 text-gray-500" />
             <div className="font-semibold">Stakeholders:</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap md:gap-2 gap-1">
               {jobData?.data?.jobStakeholders?.length === 0 ? (
                 <i className="text-gray-500">No Stakeholders</i>
               ) : (
@@ -96,6 +99,7 @@ export default function JobItem({ jobId }: JobItemProp) {
                   <Badge
                     key={stakeholder?.user?.id}
                     variant="secondary"
+                    className="max-md:text-[10px]"
                   >
                     {stakeholder?.user?.name}
                   </Badge>
@@ -110,12 +114,12 @@ export default function JobItem({ jobId }: JobItemProp) {
             ?
             <Button
               disabled={ isPending}
-              className=""
+              className="max-md: max-md:text-[12px] max-md:h-9 max-md:w-[140px]"
             >
             Become a Stakeholder
             </Button>
           :
-          <Badge variant="outline" className="w-auto h-7 bg-green-100 rounded-full">You are a Stakeholder in this job</Badge>
+          <Badge variant="outline" className="w-auto h-7 max-md:h-6 max-md:text-[10px] bg-green-100 rounded-full">You are a Stakeholder in this job</Badge>
           }
           </DialogTrigger>
           <DialogContent>
@@ -132,7 +136,7 @@ export default function JobItem({ jobId }: JobItemProp) {
               >
                 Cancel
               </Button>
-              <Button disabled={isPending} onClick={handleBecomeStakeholder}>
+              <Button className="max-md:mt-3" disabled={isPending} onClick={handleBecomeStakeholder}>
                 {isPending ?
                 <LoaderCircle className="animate-spin"/> :
                 "Confirm"}
@@ -140,9 +144,9 @@ export default function JobItem({ jobId }: JobItemProp) {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        <div className="flex items-center justify-between pt-4">
+        <div className="flex md:items-center md:flex-row max-md:gap-4 flex-col justify-between md:pt-4">
           <VoteButtons job={jobData?.data} />
-          <div className="space-y-2 w-full ml-auto max-w-[200px]">
+          <div className="space-y-2 w-full md:ml-auto md:max-w-[200px]">
             <div className="flex justify-between items-center">
               <Label className="text-sm font-medium text-gray-500">
                 Progress
@@ -159,11 +163,11 @@ export default function JobItem({ jobId }: JobItemProp) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex flex-col items-start">
+      <CardFooter className="flex flex-col items-start max-md:p-3">
         <Button
           onClick={() => setShowComments(!showComments)}
           variant="outline"
-          className="w-full max-w-[180px]"
+          className="w-full md:max-w-[180px] max-md:text-[12px]"
         >
           {showComments ? <span className="flex items-center">
             <MessageSquare className="mr-2 h-4 w-4" />

@@ -47,10 +47,10 @@ export default function DashboardNav({ role }: DashboardNavProps) {
             <NavLink href="/dashboard/admin/jobs" icon={ShoppingCart}>
               Jobs
             </NavLink>
-            <NavLink href="/dashboard/admin/stakeholders" icon={Users}>
+            <NavLink href="#" icon={Users}>
               Stakeholders
             </NavLink>
-            <NavLink href="/dashboard/admin/analytics" icon={LineChart}>
+            <NavLink href="#" icon={LineChart}>
               Analytics
             </NavLink>
           </>

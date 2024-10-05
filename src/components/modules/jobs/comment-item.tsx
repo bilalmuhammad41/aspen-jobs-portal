@@ -27,19 +27,19 @@ export default function CommentItem({comment, deleteComment}: {comment:Comment, 
       .toUpperCase();
   };
   return (
-    <div className="flex items-start space-x-4 border rounded-lg p-4">
-    <Avatar className="h-10 w-10">
+    <div className="flex items-start space-x-4 border rounded-lg md:p-4 p-3 max-md:pr-1">
+    <Avatar className="md:h-10 h-8 md:w-10 w-8">
       <AvatarImage
         src={`/avatars/${comment.user.id}.png`}
         alt={comment.user.name}
       />
-      <AvatarFallback>{getInitials(comment.user.name)}</AvatarFallback>
+      <AvatarFallback className="max-md:text-[12px]">{getInitials(comment.user.name)}</AvatarFallback>
     </Avatar>
     <div className="space-y-1 flex-1">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold">{comment.user.name}</p>
-        <div className="flex items-center space-x-2">
-          <span className="text-xs text-muted-foreground">
+        <p className="text-sm font-semibold max-md:text-[12px]">{comment.user.name}</p>
+        <div className="flex items-center md:space-x-2 space-x-1">
+          <span className="text-xs text-muted-foreground max-md:text-[10px]">
             {new Date(comment.createdAt).toLocaleDateString()}{" "}
             {new Date(comment.createdAt).toLocaleTimeString([], {
               hour: "2-digit",
@@ -53,7 +53,7 @@ export default function CommentItem({comment, deleteComment}: {comment:Comment, 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
+              <DropdownMenuItem className=" text-red-500" onSelect={() => setIsDeleteDialogOpen(true)}>
                 <Trash className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>

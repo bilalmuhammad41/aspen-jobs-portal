@@ -15,7 +15,7 @@ export default function JobListWrapper() {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="flex gap-2 items-center pb-5 ml-auto absolute top-[-60px] right-5">
+      <div className="flex gap-2 items-center pb-5 md:ml-auto md:absolute md:top-[-60px] md:right-5">
         <Input 
           className="max-w-[250px]" 
           placeholder="Search" 

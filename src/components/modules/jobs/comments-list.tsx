@@ -37,11 +37,11 @@ export default function CommentsList({ jobId }: CommentsListProps) {
   return (
     <Card className="w-full mx-auto shadow-none border-none">
       <CardHeader className="flex flex-row pt-3 px-0 items-center justify-between">
-        <CardTitle className="text-lg font-semibold">All Comments</CardTitle>
+        <CardTitle className="md:text-lg text-md font-semibold">All Comments</CardTitle>
         <Button
           variant="outline"
           onClick={() => setIsFormVisible(!isFormVisible)}
-          className="flex bg- items-center gap-2"
+          className="flex max-md:text-[12px] items-center md:gap-2 gap-1"
         >
           {isFormVisible ? (
             <>
@@ -56,7 +56,7 @@ export default function CommentsList({ jobId }: CommentsListProps) {
           )}
         </Button>
       </CardHeader>
-      <CardContent className="pb-3">
+      <CardContent className="pb-3 max-md:px-0">
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
             isFormVisible ? "max-h-96" : "max-h-0"

@@ -15,11 +15,11 @@ export default function VoteButtons({ job }: { job: Job | undefined}) {
   };
 
   return (
-    <div className="flex space-x-4">
+    <div className="flex md:space-x-4 space-x-3">
       <Button
         variant="outline"
         size="sm"
-        className={`flex items-center space-x-2 ${
+        className={`flex items-center md:space-x-2 space-x-1 ${
           job?.userVote === "UPVOTE" ? "bg-green-100 text-green-600" : ""
         }`}
         onClick={() => handleVote("UPVOTE")}
@@ -30,7 +30,7 @@ export default function VoteButtons({ job }: { job: Job | undefined}) {
       <Button
         variant="outline"
         size="sm"
-        className={`flex items-center space-x-2 ${
+        className={`flex items-center md:space-x-2 space-x-1 ${
           job?.userVote === "DOWNVOTE" ? "bg-red-100 text-red-600" : ""
         }`}
         onClick={() => handleVote("DOWNVOTE")}

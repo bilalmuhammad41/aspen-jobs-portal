@@ -52,7 +52,7 @@ export default function LoginForm() {
 
   return (
     <div>
-      <Card className="w-[400px]">
+      <Card className="md:w-[400px] w-[360px]">
         <CardHeader className="text-2xl font-bold">Login</CardHeader>
         <CardContent className="flex flex-col gap-4">
           <form action={handleSubmit} className="flex flex-col gap-4">
@@ -72,7 +72,7 @@ export default function LoginForm() {
 
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <Input placeholder="********" id="password" name="password" type="password" required />
               {state.errors?.password && (
                 <p className="text-sm text-red-500">{state.errors.password[0]}</p>
               )}

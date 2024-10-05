@@ -56,13 +56,13 @@ export default function SignupForm() {
 
   return (
     <div>
-      <Card className="w-[400px]">
+      <Card className="md:w-[400px] w-[360px]">
         <CardHeader className="text-2xl font-bold">Signup</CardHeader>
         <CardContent className="flex flex-col gap-4">
           <form className="flex flex-col gap-4" action={handleSubmit}>
             <div>
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" type="text" required />
+              <Input placeholder="Name" id="name" name="name" type="text" required />
               {state.errors?.name && <p className="text-sm text-red-500">{state.errors.name[0]}</p>}
             </div>
 
@@ -82,7 +82,7 @@ export default function SignupForm() {
 
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <Input placeholder="********" id="password" name="password" type="password" required />
               {state.errors?.password && (
                 <p className="text-sm text-red-500">{state.errors.password[0]}</p>
               )}
