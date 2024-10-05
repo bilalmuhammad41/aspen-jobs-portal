@@ -30,6 +30,7 @@ export default function JobList({ searchQuery }: JobListProps) {
         <JobItemFallback />
         <JobItemFallback />
         <JobItemFallback />
+        <JobItemFallback />
       </>
     );
   }
@@ -66,7 +67,7 @@ return (
   return (
     <div className="flex flex-col w-full gap-3 animate-in">
       {jobs?.data?.map((job, index) => (
-        <JobListItem key={index} jobId={job?.id} />
+        <JobListItem key={index} jobId={job?.id} index={index} />
       ))}
       <Pagination>
         <PaginationContent>
