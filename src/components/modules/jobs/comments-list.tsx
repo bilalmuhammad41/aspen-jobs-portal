@@ -2,9 +2,8 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Comment } from "@/app/lib/definitions";
+import { Comment, CommentApiResponse } from "@/app/lib/definitions";
 import { ChevronUp, LoaderCircle, Plus } from "lucide-react";
-import JobsService from "@/services/job.service";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import CommentItem from "./comment-item";
@@ -12,17 +11,16 @@ import CommentService from "@/services/comment.service";
 
 interface CommentsListProps {
   jobId: number;
+  comments?: CommentApiResponse | undefined;
+  isLoading?: boolean
 }
 
-export default function CommentsList({ jobId }: CommentsListProps) {
-  const { useFetchAllJobComments } = JobsService();
+export default function CommentsList({ jobId, comments, isLoading }: CommentsListProps) {
   const { useHandleAddComment, useHandleDeleteComment} = CommentService()
   const { mutate: handleAddCommentApi, isPending: isAddComment } = useHandleAddComment(jobId);
   const [newComment, setNewComment] = useState<string>("");
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const { data: comments, isLoading } = useFetchAllJobComments(jobId);
-  const{ mutate: handleDeleteComment} = useHandleDeleteComment(jobId)
-  
+  const{ mutate: handleDeleteComment} = useHandleDeleteComment(jobId);
 
   const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,7 +85,7 @@ export default function CommentsList({ jobId }: CommentsListProps) {
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                  No comments yet.
+                  Be the first one to comment.
                 </p>
               )}
             </div>

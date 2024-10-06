@@ -57,6 +57,9 @@ export default function JobItem({ jobId, index }: JobItemProp) {
   } = useHandleBecomeStakeholder(jobId);
 
   const userId = useSessionStore((state) => state.userId);
+  const { useFetchAllJobComments } = JobsService();
+
+  const { data: comments, isLoading } = useFetchAllJobComments(jobId);
 
   const isUserStakeholder = jobData?.data?.jobStakeholders?.some(
     (stakeholder) => stakeholder?.user?.id == userId
@@ -219,7 +222,7 @@ export default function JobItem({ jobId, index }: JobItemProp) {
               ) : (
                 <span className="flex items-center">
                   <MessageSquare className="mr-2 h-4 w-4" />
-                  View Comments
+                  View Comments ({comments?.data?.length})
                 </span>
               )}
               {showComments ? (
@@ -228,7 +231,7 @@ export default function JobItem({ jobId, index }: JobItemProp) {
                 <ChevronDown className="ml-2" size={15} />
               )}
             </Button>
-            {showComments && <CommentsList jobId={jobId} />}
+            {showComments && <CommentsList jobId={jobId} comments={comments} isLoading={isLoading}/>}
           </CardFooter>
         </Card>
       )}
